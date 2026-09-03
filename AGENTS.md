@@ -43,7 +43,7 @@
   1. **Python**: 严禁使用 pip/poetry，**必须**统一使用 `uv` 进行包管理与脚本执行（如 `uv run`）；
   2. **JavaScript/TypeScript**: 严禁使用 npm/yarn，**必须**统一使用 `pnpm` 进行包管理与脚本执行；
 - **Database Management**: 谨慎操作，数据迁移、测试等操作严禁将现有数据删除，谨慎操作数据迁移的回滚，防止数据被清理。
-- **Browser Validation Protocol (浏览器验证准则)**：Agent 不得自行完成、绕过或模拟任何 OAuth / SSO 认证流程，所有登录态均来源于用户已认证的 Chrome 主 profile（真实用户登录态）。完整协议（连通性自检、凭证管理、E2E 集成、实机回归等）详见 [浏览器验证协议](~/.agents/docs/browser-validation.md)；
+- **Browser Validation Protocol (浏览器验证准则)**：Agent 不得自行完成、绕过或模拟任何 OAuth / SSO 认证流程，所有登录态均来源于用户已认证的 Chrome 主 profile（真实用户登录态）。完整协议（连通性自检、凭证管理、E2E 集成、实机回归等）详见 [Browser Validation Protocol (浏览器验证协议)](~/.agents/docs/browser-validation.md)；
   1. **安全红线**：禁止在 Sandbox 浏览器中跳转 Google 同意屏；禁止以模拟用户或第三方账号替代真实登录态；禁止要求用户在 chat 中粘贴密码、Cookie 或验证码；
 - **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 [知识索引](./docs/.agents/knowledge-map.md)，并在文档目录变更时即时同步跟新；
 - **Documentation Standards (文档规范)**：
@@ -60,5 +60,5 @@
 - **UI Form Design Norms（UI 表单设计规范）**：
   1. **字段 label 与输入控件对一致性**：表单中字段的 label 与输入控件对应当总是处在同一行（不要各占一行），此外 label 一律仅占 1/12 的宽度，label 长度超过占位宽度时直接截断，并使用 Tooltip 显示完整 label；
   2. **Field 的 label 与说明文案**：Field 的 label 统一使用英文词汇，说明文案一律使用 label 右侧的 提示 Tooltip 进行显示；
-- **Reference Specifications (IEEE)**：为保障工程决策的可追溯性与学术严谨性，核心引用需遵循 [reference-specifications.md](~/.agents/docs/reference-specifications.md) IEEE 标准引用格式；
+- **Reference Specifications (IEEE)**：为保障工程决策的可追溯性与学术严谨性，核心引用需遵循 [Reference Specifications (IEEE)](~/.agents/docs/reference-specifications.md) 标准引用格式；
 - **Comments (精简注释)**：注释要保持精简明要，可以修改对齐注释含义，不要一味增加内容；

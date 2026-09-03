@@ -1,4 +1,4 @@
-# 浏览器验证协议 (Browser Validation Protocol)
+# Browser Validation Protocol (浏览器验证协议)
 
 > **文档定位**：本文是 AI Agent 浏览器验证策略的**唯一详尽来源 (Single Source of Truth)**。[AGENTS.md › Browser Validation Protocol](../../AGENTS.md) 中仅保留摘要级约束，协议实体以本文为准。
 
