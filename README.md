@@ -1,6 +1,6 @@
 # AGENTS.md
 
-> **AI Agent 软件工程与高保真协作规约 (Single Source of Truth)**
+> **AI Agent 工程协作规约 (Single Source of Truth)**
 
 本仓库旨在沉淀和演进规范 AI Agent（Claude Code、Codex、Antigravity 等）在工程项目中的行为准则与人机结对规范。以 **Entropy Reduction (熵减)** 为核心哲学，通过认知心法、架构战略与标准化执行流水线，对抗软件系统的无序熵增。
 
@@ -27,13 +27,13 @@ graph TD
 
 本仓库采用“核心总纲 + 垂直细分规约”的解耦架构：
 
-| 文件 / 目录                                                                          | 规范定位           | 核心内容说明                                                             |
-| :----------------------------------------------------------------------------------- | :----------------- | :----------------------------------------------------------------------- |
-| [AGENTS.md](./AGENTS.md)                                                             | **全局总纲**       | 协作协议核心定义源，统领“道、法、术”全局行为边界。                       |
-| [docs/structured-expression-framework.md](./docs/structured-expression-framework.md) | **表达逻辑模型**   | 融合 PREP、金字塔原理、SCQA、STAR 四大模型，定义多层级复合嵌套表达体系。 |
-| [docs/browser-validation.md](./docs/browser-validation.md)                           | **浏览器验证协议** | Agent 浏览器自动化与真实用户登录态安全协议，明确 OAuth / 沙箱红线。      |
-| [docs/reference-specifications.md](./docs/reference-specifications.md)               | **学术引用规范**   | 核心决策追溯所必须遵循的 IEEE 标准引用格式。                             |
-| [sync.sh](./sync.sh)                                                                 | **全局同步脚本**   | 一键将本仓库规约与细分文档应用/分发至本机全局环境。                      |
+| 件 / 规范                                                     | 核心内容说明                                                             |
+| ------------------------------------------------------------- | :----------------------------------------------------------------------- |
+| **[全局总纲](./AGENTS.md)**                                   | 协作协议核心定义源，统领“道、法、术”全局行为边界。                       |
+| **[表达逻辑模型](./docs/structured-expression-framework.md)** | 融合 PREP、金字塔原理、SCQA、STAR 四大模型，定义多层级复合嵌套表达体系。 |
+| **[浏览器验证协议](./docs/browser-validation.md)**            | Agent 浏览器自动化与真实用户登录态安全协议，明确 OAuth / 沙箱红线。      |
+| **[学术引用规范](./docs/reference-specifications.md)**        | 核心决策追溯所必须遵循的 IEEE 标准引用格式。                             |
+| **[全局同步脚本](./sync.sh)**                                 | 一键将本仓库规约与细分文档应用/分发至本机全局环境。                      |
 
 ---
 
