@@ -6,7 +6,7 @@
   "status": "pass",
   "visualReview": "pending",
   "artifact": {
-    "path": "/Users/cm.huang/conductor/workspaces/agents.md/olympia-v2/docs/assets/agents-architecture.html",
+    "path": "agents-architecture.html",
     "sha256": "c4cfb85f72b141667966ed626566f35c80cea0ebc08e0d10bd45c2f7e0493a5c",
     "bytes": 823752
   },
@@ -439,8 +439,7 @@
         "viewerChromeReserve": 51,
         "viewerChromeActive": true,
         "viewerChromeOk": true,
-        "resolvedTheme": "light",
-        "file": "agents-architecture.visual-check.1440x900.light.png"
+        "resolvedTheme": "light"
       },
       {
         "width": 1440,
@@ -471,8 +470,7 @@
         "viewerChromeReserve": 51,
         "viewerChromeActive": true,
         "viewerChromeOk": true,
-        "resolvedTheme": "dark",
-        "file": "agents-architecture.visual-check.1440x900.dark.png"
+        "resolvedTheme": "dark"
       },
       {
         "width": 2048,
@@ -503,8 +501,7 @@
         "viewerChromeReserve": 41,
         "viewerChromeActive": true,
         "viewerChromeOk": true,
-        "resolvedTheme": "light",
-        "file": "agents-architecture.visual-check.2048x1320.light.png"
+        "resolvedTheme": "light"
       },
       {
         "width": 2048,
@@ -535,14 +532,11 @@
         "viewerChromeReserve": 41,
         "viewerChromeActive": true,
         "viewerChromeOk": true,
-        "resolvedTheme": "dark",
-        "file": "agents-architecture.visual-check.2048x1320.dark.png"
+        "resolvedTheme": "dark"
       }
-    ],
-    "contactSheet": "agents-architecture.visual-check.html"
+    ]
   },
   "sidecars": {
-    "receipt": "agents-architecture.visual-check.json",
-    "contactSheet": "agents-architecture.visual-check.html"
+    "receipt": "agents-architecture.visual-check.json"
   }
 }
