@@ -47,7 +47,7 @@
   1. **安全红线**：禁止在 Sandbox 浏览器中跳转 Google 同意屏；禁止以模拟用户或第三方账号替代真实登录态；禁止要求用户在 chat 中粘贴密码、Cookie 或验证码；
 - **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 [知识索引](./docs/.agents/knowledge-map.md)，并在文档目录变更时即时同步跟新；
 - **Documentation Standards (文档规范)**：
-  1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，优先 **Mermaid Visualization Norms (Mermaid 可视化规范)**，构建“图文并茂”的直观文档；
+  1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，优先使用 archify Skills 绘制架构图，构建“图文并茂”的直观文档；
      - **色彩语义与兼容性**：为图表节点配置具备语义辨识度的色彩，并确保在深色模式（Dark Mode）下具有极高的对比度与清晰度；
      - **逻辑模块化解构**：针对业务跨度较大的架构流程，强制采用 `subgraph` 容器进行层级解构与边界划分，以增强图表的自解说（Self-explaining）能力；
   2. **语言叙事**：用语精准，叙事完备，行文专业，聚焦核心，篇幅精炼，形象具体，体现真实作用与用户吸引性，字数恰当。日常文档撰写严格遵守 **[Structured Expression Framework](~/.agents/docs/structured-expression-framework.md)** 逻辑模型；
