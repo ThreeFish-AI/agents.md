@@ -8,14 +8,9 @@
 
 ## 🏛 规范架构体系 (道 · 法 · 术)
 
-```mermaid
-graph TD
-    Dao["<b>道 (Mindset · 认知心法)</b><br/>上下文驱动 · 最小干预 · 循证工程 · 系统完整性 · 知识结晶 · 主动导航 · 低熵表达"]
-    Fa["<b>法 (Strategy · 架构原则)</b><br/>规划先行 · 子代理并发 · 交付前验证 · 复用驱动 · 边界管理 · 正交分解 · 单一事实源 · 分层结构化表达"]
-    Shu["<b>术 (Tactics · 执行规范)</b><br/>AI结对流水线 · 卓越运营 (Git/Hooks/Issue) · 包管理 (uv/pnpm) · 数据库安全 · 文档与表达规约 · UI设计规范"]
+![规范架构体系：道 → 法 → 术](./docs/assets/agents-architecture.svg)
 
-    Dao --> Fa --> Shu
-```
+> 🖱️ [交互版图表](./docs/assets/agents-architecture.html)（亮/暗主题自适应 · 缩放聚焦 · 关系追溯，下载后本地打开；图表源文件见 [agents-architecture.json](./docs/assets/agents-architecture.json)）
 
 - **道 (Mindset)**：确立系统的第一性原理，将“熵减”作为底线，警惕因表达与决策混乱带来的巨大商业与协作损失。
 - **法 (Strategy)**：提供架构级思考定式，主张“Plan-First Default”与“Verification Before Done”，提倡多模型复合嵌套与算力换空间。

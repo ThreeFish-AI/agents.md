@@ -1,0 +1,480 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AGENTS.md 规范架构体系",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "agents-architecture.html",
+    "viewBox": [
+      1380,
+      626
+    ],
+    "legend": {
+      "entries": {
+        "cloud": {
+          "label": "道 · 认知心法 (Mindset)"
+        },
+        "backend": {
+          "label": "法 · 架构原则 (Strategy)"
+        },
+        "frontend": {
+          "label": "术 · 执行规范 (Tactics)"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/ThreeFish-AI/agents.md",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "2bec20f216c0cc8cce2f627b0a8b82aca5135e83"
+    }
+  },
+  "components": [
+    {
+      "id": "dao",
+      "type": "cloud",
+      "label": "道",
+      "sublabel": "第一性原理 · 熵减底线",
+      "pos": [
+        70,
+        63
+      ],
+      "size": [
+        180,
+        70
+      ],
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "line": 11,
+          "label": "道 · 心法定义"
+        }
+      ]
+    },
+    {
+      "id": "dao-context",
+      "type": "cloud",
+      "label": "上下文驱动",
+      "sublabel": "Context-Driven",
+      "pos": [
+        310,
+        36
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "dao-minimal",
+      "type": "cloud",
+      "label": "最小干预",
+      "sublabel": "Minimal Intervention",
+      "pos": [
+        572,
+        36
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "dao-evidence",
+      "type": "cloud",
+      "label": "循证工程",
+      "sublabel": "Evidence-Based",
+      "pos": [
+        834,
+        36
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "dao-integrity",
+      "type": "cloud",
+      "label": "系统完整性",
+      "sublabel": "Systemic Integrity",
+      "pos": [
+        1096,
+        36
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "dao-crystallization",
+      "type": "cloud",
+      "label": "知识结晶",
+      "sublabel": "Knowledge Crystallization",
+      "pos": [
+        310,
+        104
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "dao-navigation",
+      "type": "cloud",
+      "label": "主动导航",
+      "sublabel": "Proactive Navigation",
+      "pos": [
+        572,
+        104
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "dao-entropy",
+      "type": "cloud",
+      "label": "低熵表达",
+      "sublabel": "Low-Entropy Expression",
+      "pos": [
+        834,
+        104
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa",
+      "type": "backend",
+      "label": "法",
+      "sublabel": "架构级思考定式",
+      "pos": [
+        70,
+        267
+      ],
+      "size": [
+        180,
+        70
+      ],
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "line": 21,
+          "label": "法 · 架构原则定义"
+        }
+      ]
+    },
+    {
+      "id": "fa-plan-first",
+      "type": "backend",
+      "label": "规划先行",
+      "sublabel": "Plan-First Default",
+      "pos": [
+        310,
+        240
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-subagent",
+      "type": "backend",
+      "label": "子代理并发",
+      "sublabel": "Subagent Strategy",
+      "pos": [
+        572,
+        240
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-verification",
+      "type": "backend",
+      "label": "交付前验证",
+      "sublabel": "Verification Before Done",
+      "pos": [
+        834,
+        240
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-reuse",
+      "type": "backend",
+      "label": "复用驱动",
+      "sublabel": "Reuse-Driven",
+      "pos": [
+        1096,
+        240
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-boundary",
+      "type": "backend",
+      "label": "边界管理",
+      "sublabel": "Boundary Management",
+      "pos": [
+        310,
+        308
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-orthogonal",
+      "type": "backend",
+      "label": "正交分解",
+      "sublabel": "Orthogonal Decomposition",
+      "pos": [
+        572,
+        308
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-ssot",
+      "type": "backend",
+      "label": "单一事实源",
+      "sublabel": "Single Source of Truth",
+      "pos": [
+        834,
+        308
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "fa-hierarchical",
+      "type": "backend",
+      "label": "分层结构化表达",
+      "sublabel": "Hierarchical Expression",
+      "pos": [
+        1096,
+        308
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "shu",
+      "type": "frontend",
+      "label": "术",
+      "sublabel": "可落地标准化 SOP",
+      "pos": [
+        70,
+        451
+      ],
+      "size": [
+        180,
+        70
+      ],
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "line": 32,
+          "label": "术 · 执行规范定义"
+        }
+      ]
+    },
+    {
+      "id": "shu-pipeline",
+      "type": "frontend",
+      "label": "AI 结对流水线",
+      "sublabel": "AI-Pair Pipeline",
+      "pos": [
+        310,
+        424
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "shu-operations",
+      "type": "frontend",
+      "label": "卓越运营",
+      "sublabel": "Git · Hooks · Issue",
+      "pos": [
+        572,
+        424
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "shu-package",
+      "type": "frontend",
+      "label": "包管理规范",
+      "sublabel": "uv · pnpm",
+      "pos": [
+        834,
+        424
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "shu-database",
+      "type": "frontend",
+      "label": "数据库安全",
+      "sublabel": "Database Safety",
+      "pos": [
+        310,
+        492
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "shu-documentation",
+      "type": "frontend",
+      "label": "文档与表达规约",
+      "sublabel": "Documentation Standards",
+      "pos": [
+        572,
+        492
+      ],
+      "size": [
+        244,
+        56
+      ]
+    },
+    {
+      "id": "shu-ui",
+      "type": "frontend",
+      "label": "UI 设计规范",
+      "sublabel": "UI Design Norms",
+      "pos": [
+        834,
+        492
+      ],
+      "size": [
+        244,
+        56
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Mindset · 认知心法",
+      "wraps": [
+        "dao",
+        "dao-context",
+        "dao-minimal",
+        "dao-evidence",
+        "dao-integrity",
+        "dao-crystallization",
+        "dao-navigation",
+        "dao-entropy"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Strategy · 架构原则",
+      "wraps": [
+        "fa",
+        "fa-plan-first",
+        "fa-subagent",
+        "fa-verification",
+        "fa-reuse",
+        "fa-boundary",
+        "fa-orthogonal",
+        "fa-ssot",
+        "fa-hierarchical"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Tactics · 执行规范",
+      "wraps": [
+        "shu",
+        "shu-pipeline",
+        "shu-operations",
+        "shu-package",
+        "shu-database",
+        "shu-documentation",
+        "shu-ui"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "dao-to-fa",
+      "from": "dao",
+      "to": "fa",
+      "label": "推导 · 架构成形",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "fa-to-shu",
+      "from": "fa",
+      "to": "shu",
+      "label": "落地 · 固化为 SOP",
+      "variant": "emphasis",
+      "labelDy": 24
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "道 · 确立第一性原理",
+      "items": [
+        "以「熵减」为底线，对抗软件系统的无序熵增",
+        "警惕表达与决策混乱带来的协作与商业损失"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "法 · 架构级思考定式",
+      "items": [
+        "Plan-First Default：非琐碎任务规划先行",
+        "Verification Before Done：无运行证据不交付"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "术 · 可落地标准化 SOP",
+      "items": [
+        "统一 uv / pnpm 包管理与 Git / Issue 纪律",
+        "图文并茂文档规范与浏览器验证安全红线"
+      ]
+    }
+  ]
+}
