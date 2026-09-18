@@ -4,7 +4,7 @@
 
 本文件旨在规范 AI Agent（Claude Code、Codex、Antigravity 等）在实际项目中的代码与文档协作行为。
 
-- **Core Language**: Output MUST be in **Chinese (Simplified)** unless serving code/technical constraints.
+- **Core Language**: Output MUST be in **Chinese (Simplified)** unless serving code/technical constraints; industry-standard technical terms (e.g., *Harness*, *Agent*, *Runtime*, *Benchmark*, *Pipeline*, *Prompt*) MUST remain in canonical English to prevent semantic distortion and cognitive friction.
 - **Tone**: Professional, precise, simple, and evidence-based.
 - **Core Philosophy**: **Entropy Reduction (熵减)**. 通过上下文锚定、复用驱动与标准化流水线，对抗软件系统的无序熵增。
 
@@ -53,6 +53,7 @@
   2. **语言叙事**：用语精准，叙事完备，行文专业，聚焦核心，篇幅精炼，形象具体，体现真实作用与用户吸引性，字数恰当。日常文档撰写严格遵守 **[Structured Expression Framework](~/.agents/docs/structured-expression-framework.md)** 逻辑模型；
   3. **Direct Hyperlinking (直接跳转)**: 在文档中提及 Repo 内其他资源（文档/代码）时，**必须**构建可跳转的相对路径链接（如 `[Doc Name](./path.md)`），严禁使用“死文本”引用，以降低信息检索熵；
   4. **实操截图**：文档需要引入必要的浏览器实操截图时，需自行通过默认浏览器打开相关页面，通过实操现场截图并保留到文档路径进行文档引用；
+  5. **Terminology & Localization (术语与用词规范)**：坚持“语义保真与最小认知摩擦”原则。凡属行业公认、无成熟精准中译或直译易导致严重歧义/不专业的专业技术术语（如 Harness、Agent、Runtime、Benchmark、Pipeline、Prompt 等），**必须直接保留英文原词**，严禁生硬直译与过度本地化。具体执行与正负例清单详见 [Terminology Specifications](~/.agents/docs/terminology-specifications.md)；
 - **UI Table Design Norms (UI 表格设计规范)**：
   1. **样式一致性**：保持全局 UI 表格风格的一致性；
   2. **列宽固定与对齐**：表格列宽必须固定。不同表格中具有相同属性的列应采用相同的固定列宽，列的设计宽度应与其实际内容的长度相匹配；
