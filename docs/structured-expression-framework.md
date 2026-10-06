@@ -39,3 +39,5 @@
       $$\text{SCQA (顶层序言破局)} \xrightarrow{\text{以 A 导出核心方案}} \text{金字塔结构 (中层 MECE 骨架)} \xrightarrow{\text{子模块细化展开}} \text{PREP (段落逻辑闭环)} \xrightarrow{\text{E 举例环节}} \text{STAR (实证还原)}$$
 2. **Deliberate Practice (实战刻意练习定式)**:
     - 表达逻辑是刻在工程骨子里的肌肉能力而非静态教条。在每次规划（Plan）、验证自证（Walkthrough）、代码评审（PR/Commit）、根因复盘（Issue）及日常交互中，均须自觉以该体系对照检视，在实操中实现持续熵减。
+
+**与自然语言规范的分工**：本模型定信息序与结构骨架；骨架之内的用词、句式、篇章与语气质感（去 AI 腔、删中文翻译腔）由 [Plain Language Specifications](./plain-language-specifications.md)（自然语言表达规范）治理。两者冲突时骨架优先，裁决层级以该规范总则为准。
