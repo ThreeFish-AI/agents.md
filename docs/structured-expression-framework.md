@@ -40,4 +40,4 @@
 2. **Deliberate Practice (实战刻意练习定式)**:
     - 表达逻辑是刻在工程骨子里的肌肉能力而非静态教条。在每次规划（Plan）、验证自证（Walkthrough）、代码评审（PR/Commit）、根因复盘（Issue）及日常交互中，均须自觉以该体系对照检视，在实操中实现持续熵减。
 
-**与自然语言规范的分工**：本模型定信息序与结构骨架；段落内部的用词、句式与语气质感（去 AI 腔、删中文翻译腔）由 [Plain Language Specifications](./plain-language-specifications.md)（自然语言表达规范）治理。两者冲突时骨架优先，裁决层级以该规范总则为准。
+**与自然语言规范的分工**：本模型定信息序与结构骨架；骨架之内的用词、句式、篇章与语气质感（去 AI 腔、删中文翻译腔）由 [Plain Language Specifications](./plain-language-specifications.md)（自然语言表达规范）治理。两者冲突时骨架优先，裁决层级以该规范总则为准。
