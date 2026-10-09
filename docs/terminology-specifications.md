@@ -59,6 +59,7 @@
 | **Payload** | `Payload` | ❌ 有效载荷（偏航天术语） | 传输协议或事件中所承载的业务数据体。 |
 | **Embedding / RAG** | `Embedding` / `RAG` | ❌ 嵌入、检索增强生成（过度啰嗦） | 向量化与检索增强生成，行业统一称谓。 |
 | **Fine-tuning** | `Fine-tuning` | ❌ 微调（工程配置与系统设计场景建议使用原词） | 模型参数微调。 |
+| **Issue** | `Issue` / `GitHub Issue` / `Jira Issue` | ❌ 台账、事项、议题、工单 | GitHub/GitLab/Jira 等跟踪系统的标准跟踪单元，亦泛指工程协作中的问题记录；任意场景（Issue 纪律、复盘文档、PR 描述等）直接使用英文原词，严禁译作“台账”等中文行话。 |
 
 ---
 
