@@ -60,6 +60,7 @@
 | **Embedding / RAG** | `Embedding` / `RAG` | ❌ 嵌入、检索增强生成（过度啰嗦） | 向量化与检索增强生成，行业统一称谓。 |
 | **Fine-tuning** | `Fine-tuning` | ❌ 微调（工程配置与系统设计场景建议使用原词） | 模型参数微调。 |
 | **Issue** | `Issue` / `GitHub Issue` / `Jira Issue` | ❌ 台账、事项、议题、工单 | GitHub/GitLab/Jira 等跟踪系统的标准跟踪单元，亦泛指工程协作中的问题记录；任意场景（Issue 纪律、复盘文档、PR 描述等）直接使用英文原词，严禁译作“台账”等中文行话。 |
+| **Ticket** | `Ticket` / `Jira Ticket` / `Support Ticket` | ❌ 工单、票据、票、问题单 | Jira、Zendesk、ServiceNow 等跟踪与服务台系统中的标准请求单元，亦泛指研发、运维与客服协作中的待处理请求；任意场景（需求流转、Oncall 交接、复盘文档、PR 描述等）直接使用英文原词，严禁译作“工单”等中文行话。 |
 
 ---
 
