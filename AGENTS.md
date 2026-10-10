@@ -54,7 +54,8 @@
   3. **Direct Hyperlinking (直接跳转)**: 在文档中提及 Repo 内其他资源（文档/代码）时，**必须**构建可跳转的相对路径链接（如 `[Doc Name](./path.md)`），严禁使用“死文本”引用，以降低信息检索熵；
   4. **实操截图**：文档需要引入必要的浏览器实操截图时，需自行通过默认浏览器打开相关页面，通过实操现场截图并保留到文档路径进行文档引用；
   5. **Terminology & Localization (术语与用词规范)**：坚持“语义保真与最小认知摩擦”原则。凡属行业公认、无成熟精准中译或直译易导致严重歧义/不专业的专业技术术语（如 Harness、Agent、Runtime、Benchmark、Pipeline、Prompt、Issue、Ticket 等），**必须直接保留英文原词**，严禁生硬直译与过度本地化。具体执行与正负例清单详见 [Terminology Specifications](~/.agents/docs/terminology-specifications.md)；
-  6. **Plain Language (自然语言规范)**：坚持“说人话”原则。凡叙述性产出（对话回复、日常汇报、方案叙述段、Commit/PR 正文、复盘正文），**必须像资深工程师对同事说话**：第一句给结论，句句挂得住可验证的事实，删净 AI 腔与中文翻译腔。适用范围、豁免清单、裁决层级与正负例示例详见 [Plain Language Specifications](~/.agents/docs/plain-language-specifications.md)。
+  6. **Plain Language (自然语言规范)**：坚持“说人话”原则。凡叙述性产出（对话回复、日常汇报、方案叙述段、Commit/PR 正文、复盘正文），**必须像资深工程师对同事说话**：第一句给结论，句句挂得住可验证的事实，删净 AI 腔与中文翻译腔。适用范围、豁免清单、裁决层级与正负例示例详见 [Plain Language Specifications](~/.agents/docs/plain-language-specifications.md)；
+  7. **Content Currency (内容现行态)**：文档正文只承载当前版本的实际内容。文件的历史版本与全部变更痕迹——「日期＋重铸/改版/换代」式叙述、新旧节号对照与换算、版本退役/封存声明、迁移记录——**仅由 Git 历史承载**，正文任何位置不得维护文件自身的变更记录信息（项目级 CHANGELOG、issue.md 等专用变更记录载体不在此列）。确需交代证据时效时使用 as-of 戳（截至日期 / commit 指纹），确需承接外部仍在沿用的既有术语时作「既有术语 → 现行结构」的投影映射——宾语须为外部世界的术语体系（外部论文/下游系统/共用词表），不得为本文件自身的历史节号或历史版本产物；两者均不构成版本叙事。
 - **UI Table Design Norms (UI 表格设计规范)**：
   1. **样式一致性**：保持全局 UI 表格风格的一致性；
   2. **列宽固定与对齐**：表格列宽必须固定。不同表格中具有相同属性的列应采用相同的固定列宽，列的设计宽度应与其实际内容的长度相匹配；
