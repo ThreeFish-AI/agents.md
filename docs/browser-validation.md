@@ -1,6 +1,6 @@
 # Browser Validation Protocol (浏览器验证协议)
 
-> **文档定位**：本文是 AI Agent 浏览器验证策略的**唯一详尽来源 (Single Source of Truth)**。[AGENTS.md › Browser Validation Protocol](../../AGENTS.md) 中仅保留摘要级约束，协议实体以本文为准。
+> **文档定位**：本文是 AI Agent 浏览器验证策略的**唯一详尽来源 (Single Source of Truth)**。[AGENTS.md › Browser Validation Protocol](../AGENTS.md) 中仅保留摘要级约束，协议实体以本文为准。
 
 ---
 
@@ -19,6 +19,8 @@
 > **唯一信任源：真实用户登录态。**
 >
 > Agent **不得**自行完成、绕过或模拟任何 OAuth / SSO 认证流程。所有登录态均来源于用户已认证的浏览器，登录动作由用户在自有浏览器内手动完成。
+>
+> 本不变量约束 Agent 行为（不得代为完成、绕过或模拟认证）；B 类①例外（§8）：用户可在一次性 headed 会话中手动完成 OAuth 登录后导出 `storageState`（仅限本地存储、`.gitignore` 保护、禁止 CI 挂载）。
 
 ### 1.3 术语约定
 
@@ -26,8 +28,8 @@
 | ------------------ | ------------------------------------------------------------------------------------------------------- |
 | **用户浏览器**     | 用户日常使用的 Chrome，包含已登录的 IdP 账号、扩展、书签等完整用户数据                                  |
 | **Sandbox 浏览器** | 无用户数据的隔离浏览器实例（如 Playwright 默认 `chromium.launch()` 或新建空白 Chrome profile）          |
-| **A 类场景**       | 依赖真实用户登录态的验证场景（OAuth / SSO / IdP 服务交互），**必须**通过 `claude-in-chrome` 执行        |
-| **B 类场景**       | 不依赖第三方 OAuth 的本地隔离场景（dev-cookie 注入、`storageState` 复用），可通过 Playwright 等框架执行 |
+| **A 类场景**       | 需实时接入用户浏览器既有登录态的验证场景（OAuth / SSO / IdP 服务交互），**必须**通过 `claude-in-chrome` 执行        |
+| **B 类场景**       | Agent 不经手第三方 OAuth 的本地场景（① `storageState` 复用：登录由用户一次性手动完成，见 §8；② dev-cookie 注入：不接触 OAuth，可经 Playwright 或 `claude-in-chrome`（§9.2-A）注入） |
 | **IdP**            | Identity Provider，身份提供商（如 Google、GitHub、Okta 等），负责签发认证凭证                           |
 | **Tab Group**      | `claude-in-chrome` 扩展为每个 Agent 会话创建的隔离标签组，用于管理浏览器标签页                          |
 
@@ -35,14 +37,14 @@
 
 ## 2. 问题域
 
-当项目采用第三方 OAuth / SSO 认证流时，Agent 在 Sandbox 浏览器中访问受保护页面会被 IdP 重定向至其登录端点。由于 Sandbox 浏览器不持有任何有效会话，认证流程会被同意屏、风控策略或多因素验证拦截<sup>[[3]](#ref3)</sup>，导致验证链路中断。
+当项目采用第三方 OAuth / SSO 认证流时，Agent 在 Sandbox 浏览器中访问受保护页面会被 IdP 重定向至其登录端点。由于 Sandbox 浏览器不持有任何有效会话，认证流程会被同意屏、风控策略或多因素验证拦截<sup>[[1]](#ref1)</sup>，导致验证链路中断。
 
 以下绕过手段均**不可行**且**被明确禁止**：
 
 | 手段                        | 失败原因                                                                           |
 | --------------------------- | ---------------------------------------------------------------------------------- |
 | 自动填充密码 / 验证码       | IdP 风控基于设备指纹、IP、User-Agent 等多维信号检测异常会话<sup>[[2]](#ref2)</sup> |
-| 跨浏览器复制 `storageState` | Cookie 与会话令牌绑定浏览器上下文，跨实例注入触发会话无效化                        |
+| 跨浏览器复制**用户既有会话的** `storageState`（将用户 Chrome 登录态搬移至 Sandbox） | Cookie 与会话令牌绑定浏览器上下文，异构实例注入触发会话无效化（E2E setup project 内原生登录后导出的同族复用属 B 类①合法场景，见 §8） |
 | Agent 代理完成 OAuth 同意屏 | 违反 AI Agent 安全准则中敏感凭证不入 chat 的硬性要求                               |
 
 ---
@@ -51,12 +53,12 @@
 
 ### 3.1 目标
 
-所有依赖登录态的浏览器验证统一通过 `mcp__claude-in-chrome__*` 接入用户**常用 Chrome**，复用**真实用户**的已认证会话态。用户仅需在自有浏览器中手动完成一次登录。
+所有需实时接入用户登录态的浏览器验证统一通过 `mcp__claude-in-chrome__*` 接入用户**常用 Chrome**，复用**真实用户**的已认证会话态。用户仅需在自有浏览器中手动完成一次登录。
 
 ### 3.2 非目标
 
 - 不实现密码自动填充 / 验证码自动接收 / CAPTCHA 自动求解；
-- 不在 Sandbox / 空白 profile / 模拟身份下处理 OAuth / SSO 登录跳转；
+- 不由 Agent 在 Sandbox / 空白 profile / 模拟身份下处理 OAuth / SSO 登录跳转（用户手动完成的 B 类① 登录除外，见 §8）；
 - 不在 CI / 共享环境中长期托管真实账号 `storageState`；
 - 不为多账号热切换提前抽象 profile manager（YAGNI）。
 
@@ -76,7 +78,7 @@
 4. 同时支持视觉交互（`computer` 截图 + 鼠标键盘）与无障碍树（`read_page`）双通道，适应不同验证需求；
 5. 内置批量操作（`browser_batch`）与 GIF 录制（`gif_creator`），提升验证效率与文档化能力。
 
-> **A 类（交互）vs B 类（自治）的驱动分工**：上述"唯一驱动"针对 **A 类交互场景**——由开发者或 Agent 在**真人监督**的会话中验证 OAuth/SSO/认证态 UI，复用用户真实 Chrome 登录态。而 **B 类自治场景**（[Routine](../concepts/subsystems/039-the-routine-system.md) 后台 Claude Code 子进程：无真人、无桌面、headless）无法使用 claude-in-chrome（其需可见桌面浏览器 + 人工完成登录/CAPTCHA，且非 command/url 形态、无法注入 mcp_config）。为此，系统将 **Playwright MCP（`@playwright/mcp`，headless · isolated）内置为全系统默认浏览器操作 MCP**，经单一注入点 `builtin_tools(claude_code).config.mcp_config` provision 至所有 Routine 运行时，用于浏览器实机回归验证；鉴权回归复用本仓 dev-cookie storageState 旁路（§9，**非** IdP storageState 复制）。选型论证见 [浏览器操作 MCP 调研](../research/self-evolution/120-browser-automation-mcp.md)，集成与使用见 [浏览器操作 MCP 集成方案](../concepts/design/browser-automation-mcp-integration.md)。
+> **A 类（交互）vs B 类（自治）的驱动分工**：上述“唯一驱动”针对 **A 类交互场景**——由开发者或 Agent 在**真人监督**的会话中验证 OAuth/SSO/认证态 UI，复用用户真实 Chrome 登录态。而 **B 类自治场景**（无人值守的后台 Agent 运行时：无真人监督、无桌面环境、headless）无法使用 claude-in-chrome（其以浏览器扩展形态接入，需可见桌面浏览器，登录 / CAPTCHA 须人工完成）。为此，无人值守的 B 类自治运行时应将 **Playwright MCP（`@playwright/mcp`，headless · isolated）配置为默认浏览器操作 MCP**，由采用本协议的项目在 Agent 运行时配置中统一注入（如各运行时的 MCP 配置注入点），供后台运行时执行浏览器实机回归验证；交互态的 B 类② 即时验证亦可经 claude-in-chrome 注入（§9.2-A）；鉴权回归复用 §9 的 dev-cookie storageState 旁路（**非** IdP storageState 复制）。
 
 ### 4.2 工具职责矩阵
 
@@ -84,8 +86,8 @@
 | ------------ | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | 浏览器实例   | 用户常用 Chrome（扩展接入，共享真实 profile）                                 | Playwright 自启动 Chromium（独立 Sandbox）                                       |
 | 登录态来源   | 用户原生已登录 Chrome；扩展自动共享会话                                       | 默认空 profile，需 `storageState` / `userDataDir` 注入                           |
-| OAuth 兼容性 | ✅ 高（同设备指纹 / 同登录历史）                                               | ❌ 禁止（触发 IdP 风控拦截）                                                      |
-| 适用场景     | A 类：Agent 即时验证、OAuth/SSO 链路、IdP 服务交互、UI 回归                   | B 类：① E2E setup project 人工登录后 `storageState` 复用；② 本地 dev-cookie 注入 |
+| OAuth 兼容性 | ✅ 高（同设备指纹 / 同登录历史）                                               | ❌ 禁止 Agent 驱动（触发 IdP 风控拦截；用户手动完成的 B 类① 登录除外，见 §8）      |
+| 适用场景     | A 类：Agent 即时验证、OAuth/SSO 链路、IdP 服务交互、UI 回归；B 类② dev-cookie 注入（交互态，§9.2-A） | B 类：① E2E setup project 人工登录后 `storageState` 复用；② 本地 dev-cookie 注入 |
 | 凭证安全语义 | 用户全程在自有浏览器内完成敏感操作，不持久化任何凭证副本                      | `storageState` / `userDataDir` 仅落本地，须 `.gitignore` 保护                    |
 | 额外能力     | `gif_creator` 录制验证过程；`browser_batch` 批量操作；`find` 自然语言元素定位 | 完整 Playwright API（测试框架级控制）                                            |
 
@@ -122,11 +124,11 @@ flowchart TD
   Reachable -->|否| Recover["引导用户：<br/>1. 确认 Chrome 已启动<br/>2. 确认 claude-in-chrome 扩展已安装启用<br/>3. 点击扩展图标完成连接"]
   Recover --> OK
 
-  NeedAuth -->|"B 类"| BRoute{"隔离场景分流"}
+  NeedAuth -->|"B 类"| BRoute{"B 类场景分流"}
   BRoute --> E2E["E2E setup project<br/>真人一次性登录 →<br/>storageState 复用"]
-  BRoute --> DevCK["本地 dev-cookie 注入<br/>(不接触 OAuth)"]
+  BRoute --> DevCK["本地 dev-cookie 注入<br/>(不接触 OAuth)<br/>亦可经 claude-in-chrome 注入 · §9.2-A"]
 
-  NeedAuth -.->|"严禁"| Forbid["❌ Sandbox 浏览器<br/>跳转 IdP 同意屏"]
+  NeedAuth -.->|"严禁"| Forbid["❌ Agent 驱动 Sandbox 浏览器<br/>跳转 IdP 同意屏"]
 
   style Start fill:#0f172a,stroke:#60a5fa,color:#e2e8f0
   style CiC fill:#0b1f2a,stroke:#34d399,color:#ecfdf5
@@ -148,7 +150,7 @@ flowchart TD
 
 | 编号 | 禁止行为                                                     | 违反原则         |
 | ---- | ------------------------------------------------------------ | ---------------- |
-| F-1  | 在 Sandbox 浏览器中跳转 IdP 同意屏                           | 核心不变量 §1.2  |
+| F-1  | Agent 在 Sandbox 浏览器中跳转 IdP 同意屏（用户手动完成的 B 类① 登录除外，见 §8） | 核心不变量 §1.2  |
 | F-2  | 以模拟用户或第三方账号替代真实用户完成登录态验证             | 核心不变量 §1.2  |
 | F-3  | 要求用户在 chat 中粘贴密码、Cookie 或一次性验证码            | 敏感信息保护准则 |
 | F-4  | 读取、复制或传输用户密码 / 验证码 / Refresh Token            | 敏感信息保护准则 |
@@ -331,7 +333,7 @@ mcp__claude-in-chrome__gif_creator({
 
 ### 8.1 会话复用工作流
 
-Playwright E2E 测试通过 `setup` project 实现一次性人工登录后的会话复用<sup>[[1]](#ref1)</sup>：
+Playwright E2E 测试通过 `setup` project 实现一次性人工登录后的会话复用<sup>[[3]](#ref3)</sup>：
 
 ```mermaid
 sequenceDiagram
@@ -439,8 +441,8 @@ npx playwright test <your.authed.spec.ts>
 
 ## References (IEEE)
 
-<a id="ref1"></a>[1] Microsoft, "Authentication," _Playwright Documentation_, 2025. [Online]. Available: https://playwright.dev/docs/auth.
+<a id="ref1"></a>[1] D. Hardt, "The OAuth 2.0 Authorization Framework," *IETF RFC 6749*, Oct. 2012, doi: 10.17487/RFC6749.
 
-<a id="ref2"></a>[2] OWASP Foundation, "Session Management Cheat Sheet," _OWASP Cheat Sheet Series_, 2024. [Online]. Available: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html.
+<a id="ref2"></a>[2] OWASP Foundation, "Session Management Cheat Sheet," *OWASP Cheat Sheet Series*, 2024. [Online]. Available: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html.
 
-<a id="ref3"></a>[3] D. Hardt, "The OAuth 2.0 Authorization Framework," _IETF RFC 6749_, Oct. 2012, doi: 10.17487/RFC6749.
+<a id="ref3"></a>[3] Microsoft, "Authentication," *Playwright Documentation*, 2025. [Online]. Available: https://playwright.dev/docs/auth.

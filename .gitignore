@@ -1,0 +1,6 @@
+# Conductor workspace artifacts
+.context/
+.conductor/settings.local.*
+
+# AGENTS.md「Temp Management」规定的临时产物
+.temp/

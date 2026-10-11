@@ -14,6 +14,13 @@ NC='\033[0m' # No Color
 
 # 路径定义
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# worktree/submodule 防护：.git 为文件时说明处于 worktree/submodule 环境，
+# 从此类环境运行会把全局 symlink/分发目标错误指向临时目录
+if [[ -f "$PROJECT_ROOT/.git" ]]; then
+  echo "错误: 检测到 git worktree/submodule 环境（.git 为文件）。请从主 checkout 运行本脚本。" >&2
+  exit 1
+fi
 GLOBAL_CODEX_DIR="$HOME/.codex"
 GLOBAL_AGENTS_DOCS_DIR="$HOME/.agents/docs"
 
@@ -56,6 +63,13 @@ if [[ -f "$SOURCE_AGENTS" ]]; then
     ln -sf "$SOURCE_AGENTS" "$TARGET_AGENTS"
     echo -e "  [链接] $SOURCE_AGENTS -> ${YELLOW}$TARGET_AGENTS${NC}"
   else
+    # 目标为 symlink（旧 --link 残留）时先摘除防 cp 写穿；目标为目录时拒绝，防误嵌套
+    if [[ -L "$TARGET_AGENTS" ]]; then
+      rm -f "$TARGET_AGENTS"
+    elif [[ -d "$TARGET_AGENTS" ]]; then
+      echo "错误: 分发目标 $TARGET_AGENTS 为目录，请先手动处理" >&2
+      exit 1
+    fi
     cp -f "$SOURCE_AGENTS" "$TARGET_AGENTS"
     echo -e "  [复制] AGENTS.md -> ${YELLOW}$TARGET_AGENTS${NC}"
   fi
@@ -76,6 +90,12 @@ if [[ -d "$SOURCE_DOCS_DIR" ]]; then
         ln -sf "$doc" "$target_doc"
         echo -e "  [链接] docs/$filename -> ${YELLOW}$target_doc${NC}"
       else
+        if [[ -L "$target_doc" ]]; then
+          rm -f "$target_doc"
+        elif [[ -d "$target_doc" ]]; then
+          echo "错误: 分发目标 $target_doc 为目录，请先手动处理" >&2
+          exit 1
+        fi
         cp -f "$doc" "$target_doc"
         echo -e "  [复制] docs/$filename -> ${YELLOW}$target_doc${NC}"
       fi
