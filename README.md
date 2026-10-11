@@ -32,6 +32,7 @@
 | **[浏览器验证协议](./docs/browser-validation.md)**              | Agent 浏览器自动化与真实用户登录态安全协议，明确 OAuth / Sandbox 红线。                                   |
 | **[学术引用规范](./docs/reference-specifications.md)**          | 核心决策追溯所必须遵循的 IEEE 标准引用格式。                                                          |
 | **[全局同步脚本](./sync.sh)**                                   | 一键将本仓库规约与细分文档应用/分发至本机全局环境。                                                   |
+| **[统一 RSI 机制](https://github.com/ThreeFish-AI/rsi)**（外部仓） | 自改进经验沉淀回路的唯一机制源：注册仓库路由表、G0–G4 门禁与 PR 后上下文自动审阅。                  |
 
 ---
 
