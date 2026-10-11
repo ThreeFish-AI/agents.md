@@ -8,9 +8,9 @@
 
 ## 🏛 规范架构体系 (道 · 法 · 术)
 
-![规范架构体系：道 → 法 → 术](./docs/assets/agents-architecture.svg)
+![规范架构体系：道 → 法 → 术](./docs/diagrams/agents-architecture/agents-architecture.svg)
 
-> 🖱️ [交互版图表](./docs/assets/agents-architecture.html)（亮/暗主题自适应 · 缩放聚焦 · 关系追溯，下载后本地打开；图表源文件见 [agents-architecture.json](./docs/assets/agents-architecture.json)）
+> 🖱️ [交互版图表](./docs/diagrams/agents-architecture/agents-architecture.html)（亮/暗主题自适应 · 缩放聚焦 · 关系追溯，下载后本地打开；图表源文件见 [agents-architecture.json](./docs/diagrams/agents-architecture/agents-architecture.json)）
 
 - **道 (Mindset)**：确立系统的第一性原理，将“熵减”作为底线，警惕因表达与决策混乱带来的巨大商业与协作损失。
 - **法 (Strategy)**：提供架构级思考定式，主张“Plan-First Default”与“Verification Before Done”，提倡多模型复合嵌套与算力换空间。
@@ -55,6 +55,6 @@
 
 ## 🤝 适用智能体生态
 
-- **Claude Code**：支持自定义 Slash Command（如 `/commit`）与全局上下文锚定。
+- **Claude Code**：支持自定义 Slash Command（如 `/commit-no-push`）与全局上下文锚定。
 - **Codex**：读取 `~/.codex/AGENTS.md` 实现全生命周期编码约束。
 - **Antigravity / Gemini CLI**：严格遵循规划先行、子代理编排与交付自证定式。
