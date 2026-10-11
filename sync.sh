@@ -14,6 +14,13 @@ NC='\033[0m' # No Color
 
 # 路径定义
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# worktree/submodule 防护：.git 为文件时说明处于 worktree/submodule 环境，
+# 从此类环境运行会把全局 symlink/分发目标错误指向临时目录
+if [[ -f "$PROJECT_ROOT/.git" ]]; then
+  echo "错误: 检测到 git worktree/submodule 环境（.git 为文件）。请从主 checkout 运行本脚本。" >&2
+  exit 1
+fi
 GLOBAL_CODEX_DIR="$HOME/.codex"
 GLOBAL_AGENTS_DOCS_DIR="$HOME/.agents/docs"
 
@@ -56,7 +63,7 @@ if [[ -f "$SOURCE_AGENTS" ]]; then
     ln -sf "$SOURCE_AGENTS" "$TARGET_AGENTS"
     echo -e "  [链接] $SOURCE_AGENTS -> ${YELLOW}$TARGET_AGENTS${NC}"
   else
-    cp -f "$SOURCE_AGENTS" "$TARGET_AGENTS"
+    rm -f "$TARGET_AGENTS" && cp -f "$SOURCE_AGENTS" "$TARGET_AGENTS"
     echo -e "  [复制] AGENTS.md -> ${YELLOW}$TARGET_AGENTS${NC}"
   fi
 else
@@ -76,7 +83,7 @@ if [[ -d "$SOURCE_DOCS_DIR" ]]; then
         ln -sf "$doc" "$target_doc"
         echo -e "  [链接] docs/$filename -> ${YELLOW}$target_doc${NC}"
       else
-        cp -f "$doc" "$target_doc"
+        rm -f "$target_doc" && cp -f "$doc" "$target_doc"
         echo -e "  [复制] docs/$filename -> ${YELLOW}$target_doc${NC}"
       fi
     fi
