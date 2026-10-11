@@ -33,7 +33,7 @@
 
 - **Structured AI-Pair Pipeline (规范化 AI 结对流水线)**: 遵循 **Specification-Driven (规约驱动)** + **Context-Anchored (上下文锚定)** + **AI-Pair (AI 结对)** 模式，将开发固化为可审计的流水线，避免代码腐化为无法维护的“大泥球 (Big Ball of Mud)”。
 - **Operational Excellence (卓越运营)**:
-  1. **Git Discipline**: 默认严禁调用 git commit；当用户显式要求提交时，一律使用 Claude Code 的自定义 Slash Command: `/commit-no-push` 进行操作（若非 Claude Code 运行环境，则读取 `/commit-no-push` 命令中的规则执行）。严禁执行 Rebase；push 与提交解耦——仅当用户显式要求或需更新已开启的 PR 时单独执行 `git push`；
+  1. **Git Discipline**: 默认严禁调用 git commit；当用户显式要求提交时，一律使用 Claude Code 的自定义 Slash Command: `/commit` 进行操作（若非 Claude Code 运行环境，则读取 `/commit` 命令中的规则执行）。严禁执行 Rebase；严禁向 `master`/`main` 等主分支直接推送变更，变更一律基于工作分支提交并经 PR 合入；
   2. **Temp Management**: 临时产物（执行计划等）一律收敛至 `.temp/` 并及时清理；
   3. **Link Validity**: 确保所有引用的 URL 可访问且具备明确的上下文价值；
   4. **Testing**: 统一在 `tests/` 下维护测试用例，区分单元测试（unit）和集成测试（integration），所有测试的本地运行总时间控制在 3 min 以内；

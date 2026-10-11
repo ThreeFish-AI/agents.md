@@ -57,6 +57,6 @@
 
 ## 🤝 适用智能体生态
 
-- **Claude Code**：支持自定义 Slash Command（如 `/commit-no-push`）；全局上下文可经 `~/.claude/CLAUDE.md` 手动锚定（见上方「映射路径说明」）。
+- **Claude Code**：支持自定义 Slash Command（如 `/commit`）；全局上下文可经 `~/.claude/CLAUDE.md` 手动锚定（见上方「映射路径说明」）。
 - **Codex**：读取 `~/.codex/AGENTS.md` 实现全生命周期编码约束。
 - **Antigravity / Gemini CLI**：严格遵循规划先行、子代理编排与交付自证定式。
