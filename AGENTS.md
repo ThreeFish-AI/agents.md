@@ -43,8 +43,8 @@
   1. **Python**: 严禁使用 pip/poetry，**必须**统一使用 `uv` 进行包管理与脚本执行（如 `uv run`）；
   2. **JavaScript/TypeScript**: 严禁使用 npm/yarn，**必须**统一使用 `pnpm` 进行包管理与脚本执行；
 - **Database Management**: 谨慎操作，数据迁移、测试等操作严禁将现有数据删除，谨慎操作数据迁移的回滚，防止数据被清理。
-- **Browser Validation Protocol (浏览器验证准则)**：Agent 不得自行完成、绕过或模拟任何 OAuth / SSO 认证流程，所有登录态均来源于用户已认证的 Chrome 主 profile（真实用户登录态）。完整协议（连通性自检、凭证管理、E2E 集成、实机回归等）详见 [Browser Validation Protocol (浏览器验证协议)](~/.agents/docs/browser-validation.md)；
-  1. **安全红线**：禁止在 Sandbox 浏览器中跳转 Google 同意屏；禁止以模拟用户或第三方账号替代真实登录态；禁止要求用户在 chat 中粘贴密码、Cookie 或验证码；
+- **Browser Validation Protocol (浏览器验证准则)**：Agent 不得自行完成、绕过或模拟任何 OAuth / SSO 认证流程，所有登录态均来源于用户已认证的浏览器（真实用户登录态；B 类① 经用户一次性手动登录导出 `storageState` 的例外见协议 §8）。完整协议（连通性自检、凭证管理、E2E 集成、实机回归等）详见 [Browser Validation Protocol (浏览器验证协议)](~/.agents/docs/browser-validation.md)；
+  1. **安全红线**：禁止 Agent 在 Sandbox 浏览器中跳转 Google 同意屏（用户手动完成的 B 类① 登录除外，见协议 §8）；禁止以模拟用户或第三方账号替代真实登录态；禁止要求用户在 chat 中粘贴密码、Cookie 或验证码；
 - **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 `docs/.agents/knowledge-map.md`，并在文档目录变更时即时同步更新；
 - **Documentation Standards (文档规范)**：
   1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，一律遵循 **Archify 图表规范** 产出图表，构建“图文并茂”的直观文档；
