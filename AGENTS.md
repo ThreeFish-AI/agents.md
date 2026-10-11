@@ -48,11 +48,11 @@
 - **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 [知识索引](./docs/.agents/knowledge-map.md)，并在文档目录变更时即时同步跟新；
 - **Documentation Standards (文档规范)**：
   1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，一律遵循 **Archify 图表规范** 产出图表，构建“图文并茂”的直观文档；
-     - **单一事实源 (SSOT)**：图源 candidate JSON 为唯一权威定义，入库于仓库 `docs/diagrams/<slug>/`（`<slug>.json` 图源 + `<slug>.html` 交互版 + `<slug>.svg` 双主题嵌入版）；生成或修改图必须经 `archify finalize --quality showcase` 门禁（validate / deliver / check / browser-check）通过；
+     - **单一事实源 (SSOT)**：图源 candidate JSON 为唯一权威定义，入库于仓库 `docs/diagrams/<slug>/`（`<slug>.json` 图源 + `<slug>.html` 交互版 + `<slug>.svg` 双主题嵌入版 + `<slug>.visual-check.json` 浏览器校验证据）；生成或修改图必须经 `archify finalize --quality showcase` 门禁（validate / deliver / check / browser-check）通过；
      - **嵌入方式**：文档以相对路径嵌入 SVG（仓库根用 `docs/diagrams/<slug>/<slug>.svg`，docs/ 内用 `diagrams/<slug>/<slug>.svg`），双主题自动适配深浅模式；
      - **色彩语义与兼容性**：为图表节点配置具备语义辨识度的色彩，并确保在深色模式（Dark Mode）下具有极高的对比度与清晰度；
      - **逻辑模块化解构**：针对业务跨度较大的架构流程，以 boundary 分层承载领域边界与层级解构，以增强图表的自解说（Self-explaining）能力；
-     - **禁止新增 mermaid 代码块**（存量逐步置换为 Archify 图）；
+     - **Mermaid 边界**：面向人类展示的架构/流程图禁止新增 mermaid 代码块（存量逐步置换为 Archify 图）；Agent 运行时消费的协议文档中承载决策路由、状态判定的图，保留 mermaid 代码块形式（结构化文本，AI 可直接解析），不适用 Archify 门禁；
   2. **语言叙事**：用语精准，叙事完备，行文专业，聚焦核心，篇幅精炼，形象具体，体现真实作用与用户吸引性，字数恰当。日常文档撰写严格遵守 **[Structured Expression Framework](~/.agents/docs/structured-expression-framework.md)** 逻辑模型；
   3. **Direct Hyperlinking (直接跳转)**: 在文档中提及 Repo 内其他资源（文档/代码）时，**必须**构建可跳转的相对路径链接（如 `[Doc Name](./path.md)`），严禁使用“死文本”引用，以降低信息检索熵；
   4. **实操截图**：文档需要引入必要的浏览器实操截图时，需自行通过默认浏览器打开相关页面，通过实操现场截图并保留到文档路径进行文档引用；
