@@ -63,7 +63,14 @@ if [[ -f "$SOURCE_AGENTS" ]]; then
     ln -sf "$SOURCE_AGENTS" "$TARGET_AGENTS"
     echo -e "  [链接] $SOURCE_AGENTS -> ${YELLOW}$TARGET_AGENTS${NC}"
   else
-    rm -f "$TARGET_AGENTS" && cp -f "$SOURCE_AGENTS" "$TARGET_AGENTS"
+    # 目标为 symlink（旧 --link 残留）时先摘除防 cp 写穿；目标为目录时拒绝，防误嵌套
+    if [[ -L "$TARGET_AGENTS" ]]; then
+      rm -f "$TARGET_AGENTS"
+    elif [[ -d "$TARGET_AGENTS" ]]; then
+      echo "错误: 分发目标 $TARGET_AGENTS 为目录，请先手动处理" >&2
+      exit 1
+    fi
+    cp -f "$SOURCE_AGENTS" "$TARGET_AGENTS"
     echo -e "  [复制] AGENTS.md -> ${YELLOW}$TARGET_AGENTS${NC}"
   fi
 else
@@ -83,7 +90,13 @@ if [[ -d "$SOURCE_DOCS_DIR" ]]; then
         ln -sf "$doc" "$target_doc"
         echo -e "  [链接] docs/$filename -> ${YELLOW}$target_doc${NC}"
       else
-        rm -f "$target_doc" && cp -f "$doc" "$target_doc"
+        if [[ -L "$target_doc" ]]; then
+          rm -f "$target_doc"
+        elif [[ -d "$target_doc" ]]; then
+          echo "错误: 分发目标 $target_doc 为目录，请先手动处理" >&2
+          exit 1
+        fi
+        cp -f "$doc" "$target_doc"
         echo -e "  [复制] docs/$filename -> ${YELLOW}$target_doc${NC}"
       fi
     fi
