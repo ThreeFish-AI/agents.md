@@ -1,6 +1,6 @@
 # Browser Validation Protocol (浏览器验证协议)
 
-> **文档定位**：本文是 AI Agent 浏览器验证策略的**唯一详尽来源 (Single Source of Truth)**。[AGENTS.md › Browser Validation Protocol](../../AGENTS.md) 中仅保留摘要级约束，协议实体以本文为准。
+> **文档定位**：本文是 AI Agent 浏览器验证策略的**唯一详尽来源 (Single Source of Truth)**。[AGENTS.md › Browser Validation Protocol](../AGENTS.md) 中仅保留摘要级约束，协议实体以本文为准。
 
 ---
 
@@ -19,6 +19,8 @@
 > **唯一信任源：真实用户登录态。**
 >
 > Agent **不得**自行完成、绕过或模拟任何 OAuth / SSO 认证流程。所有登录态均来源于用户已认证的浏览器，登录动作由用户在自有浏览器内手动完成。
+>
+> 本不变量约束 Agent 行为（不得代为完成、绕过或模拟认证）；B 类①例外（§8）：用户可在一次性 headed 会话中手动完成 OAuth 登录后导出 `storageState`（仅限本地存储、`.gitignore` 保护、禁止 CI 挂载）。
 
 ### 1.3 术语约定
 
@@ -35,14 +37,14 @@
 
 ## 2. 问题域
 
-当项目采用第三方 OAuth / SSO 认证流时，Agent 在 Sandbox 浏览器中访问受保护页面会被 IdP 重定向至其登录端点。由于 Sandbox 浏览器不持有任何有效会话，认证流程会被同意屏、风控策略或多因素验证拦截<sup>[[3]](#ref3)</sup>，导致验证链路中断。
+当项目采用第三方 OAuth / SSO 认证流时，Agent 在 Sandbox 浏览器中访问受保护页面会被 IdP 重定向至其登录端点。由于 Sandbox 浏览器不持有任何有效会话，认证流程会被同意屏、风控策略或多因素验证拦截<sup>[[1]](#ref1)</sup>，导致验证链路中断。
 
 以下绕过手段均**不可行**且**被明确禁止**：
 
 | 手段                        | 失败原因                                                                           |
 | --------------------------- | ---------------------------------------------------------------------------------- |
 | 自动填充密码 / 验证码       | IdP 风控基于设备指纹、IP、User-Agent 等多维信号检测异常会话<sup>[[2]](#ref2)</sup> |
-| 跨浏览器复制 `storageState` | Cookie 与会话令牌绑定浏览器上下文，跨实例注入触发会话无效化                        |
+| 跨浏览器复制**用户既有会话的** `storageState`（将用户 Chrome 登录态搬移至 Sandbox） | Cookie 与会话令牌绑定浏览器上下文，异构实例注入触发会话无效化（E2E setup project 内原生登录后导出的同族复用属 B 类①合法场景，见 §8） |
 | Agent 代理完成 OAuth 同意屏 | 违反 AI Agent 安全准则中敏感凭证不入 chat 的硬性要求                               |
 
 ---
@@ -76,7 +78,7 @@
 4. 同时支持视觉交互（`computer` 截图 + 鼠标键盘）与无障碍树（`read_page`）双通道，适应不同验证需求；
 5. 内置批量操作（`browser_batch`）与 GIF 录制（`gif_creator`），提升验证效率与文档化能力。
 
-> **A 类（交互）vs B 类（自治）的驱动分工**：上述"唯一驱动"针对 **A 类交互场景**——由开发者或 Agent 在**真人监督**的会话中验证 OAuth/SSO/认证态 UI，复用用户真实 Chrome 登录态。而 **B 类自治场景**（[Routine](../concepts/subsystems/039-the-routine-system.md) 后台 Claude Code 子进程：无真人、无桌面、headless）无法使用 claude-in-chrome（其需可见桌面浏览器 + 人工完成登录/CAPTCHA，且非 command/url 形态、无法注入 mcp_config）。为此，系统将 **Playwright MCP（`@playwright/mcp`，headless · isolated）内置为全系统默认浏览器操作 MCP**，经单一注入点 `builtin_tools(claude_code).config.mcp_config` provision 至所有 Routine 运行时，用于浏览器实机回归验证；鉴权回归复用本仓 dev-cookie storageState 旁路（§9，**非** IdP storageState 复制）。选型论证见 [浏览器操作 MCP 调研](../research/self-evolution/120-browser-automation-mcp.md)，集成与使用见 [浏览器操作 MCP 集成方案](../concepts/design/browser-automation-mcp-integration.md)。
+> **A 类（交互）vs B 类（自治）的驱动分工**：上述“唯一驱动”针对 **A 类交互场景**——由开发者或 Agent 在**真人监督**的会话中验证 OAuth/SSO/认证态 UI，复用用户真实 Chrome 登录态。而 **B 类自治场景**（无人值守的后台 Agent 运行时：无真人监督、无桌面环境、headless）无法使用 claude-in-chrome（其以浏览器扩展形态接入，需可见桌面浏览器，登录 / CAPTCHA 须人工完成）。为此，B 类场景应将 **Playwright MCP（`@playwright/mcp`，headless · isolated）配置为默认浏览器操作 MCP**，由采用本协议的项目在 Agent 运行时配置中统一注入（如各运行时的 MCP 配置注入点），供后台运行时执行浏览器实机回归验证；鉴权回归复用 §9 的 dev-cookie storageState 旁路（**非** IdP storageState 复制）。
 
 ### 4.2 工具职责矩阵
 
@@ -124,7 +126,7 @@ flowchart TD
 
   NeedAuth -->|"B 类"| BRoute{"隔离场景分流"}
   BRoute --> E2E["E2E setup project<br/>真人一次性登录 →<br/>storageState 复用"]
-  BRoute --> DevCK["本地 dev-cookie 注入<br/>(不接触 OAuth)"]
+  BRoute --> DevCK["本地 dev-cookie 注入<br/>(不接触 OAuth)<br/>亦可经 claude-in-chrome 注入 · §9.2-A"]
 
   NeedAuth -.->|"严禁"| Forbid["❌ Sandbox 浏览器<br/>跳转 IdP 同意屏"]
 
@@ -331,7 +333,7 @@ mcp__claude-in-chrome__gif_creator({
 
 ### 8.1 会话复用工作流
 
-Playwright E2E 测试通过 `setup` project 实现一次性人工登录后的会话复用<sup>[[1]](#ref1)</sup>：
+Playwright E2E 测试通过 `setup` project 实现一次性人工登录后的会话复用<sup>[[3]](#ref3)</sup>：
 
 ```mermaid
 sequenceDiagram
@@ -439,8 +441,8 @@ npx playwright test <your.authed.spec.ts>
 
 ## References (IEEE)
 
-<a id="ref1"></a>[1] Microsoft, "Authentication," _Playwright Documentation_, 2025. [Online]. Available: https://playwright.dev/docs/auth.
+<a id="ref1"></a>[1] D. Hardt, "The OAuth 2.0 Authorization Framework," *IETF RFC 6749*, Oct. 2012, doi: 10.17487/RFC6749.
 
-<a id="ref2"></a>[2] OWASP Foundation, "Session Management Cheat Sheet," _OWASP Cheat Sheet Series_, 2024. [Online]. Available: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html.
+<a id="ref2"></a>[2] OWASP Foundation, "Session Management Cheat Sheet," *OWASP Cheat Sheet Series*, 2024. [Online]. Available: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html.
 
-<a id="ref3"></a>[3] D. Hardt, "The OAuth 2.0 Authorization Framework," _IETF RFC 6749_, Oct. 2012, doi: 10.17487/RFC6749.
+<a id="ref3"></a>[3] Microsoft, "Authentication," *Playwright Documentation*, 2025. [Online]. Available: https://playwright.dev/docs/auth.

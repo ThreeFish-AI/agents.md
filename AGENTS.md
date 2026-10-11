@@ -33,19 +33,19 @@
 
 - **Structured AI-Pair Pipeline (规范化 AI 结对流水线)**: 遵循 **Specification-Driven (规约驱动)** + **Context-Anchored (上下文锚定)** + **AI-Pair (AI 结对)** 模式，将开发固化为可审计的流水线，避免代码腐化为无法维护的“大泥球 (Big Ball of Mud)”。
 - **Operational Excellence (卓越运营)**:
-  1. **Git Discipline**: 默认严禁调用 git commit；当用户显式要求提交时，一律使用 Claude Code 的自定义 Slash Command: `/commit-no-push` 进行操作（若非 Claude Code 运行环境，则读取 /commit-no-push 命令中的规则执行）。严禁执行 Rebase；push 与提交解耦——仅当用户显式要求或需更新已开启的 PR 时单独执行 `git push`；
+  1. **Git Discipline**: 默认严禁调用 git commit；当用户显式要求提交时，一律使用 Claude Code 的自定义 Slash Command: `/commit-no-push` 进行操作（若非 Claude Code 运行环境，则读取 `/commit-no-push` 命令中的规则执行）。严禁执行 Rebase；push 与提交解耦——仅当用户显式要求或需更新已开启的 PR 时单独执行 `git push`；
   2. **Temp Management**: 临时产物（执行计划等）一律收敛至 `.temp/` 并及时清理；
   3. **Link Validity**: 确保所有引用的 URL 可访问且具备明确的上下文价值；
-  4. **Testing**: 统一在 tests/ 下维护测试用例，区分单元测试（unit）和集成测试（integration），所有测试的本地运行总时间控制在 3 min 以内；
-  5. **Pre-commit Hooks**: 首次克隆仓库使用 `uv run pre-commit install` 激活本地 Git hooks，使 Ruff lint（含 auto-fix）、Ruff format 及通用代码卫生检查在每次 commit 前自动运行。若 hooks 自动修复了问题，提交会被中断，执行 `git add -p` 审阅修复内容后重新提交即可；
-  6. **Issue**: 在实际项目的 [issue.md](docs/.agents/issue.md) 中维护你处理过的 Issue 摘要（问题描述、表因根因、处理方式、后续防范、同类问题影响与处理注意事项等），便于同类问题的跨上下文处理；注意识别相同 Issue，不要同 Issue 多处维护；
+  4. **Testing**: 统一在 `tests/` 下维护测试用例，区分单元测试（unit）和集成测试（integration），所有测试的本地运行总时间控制在 3 min 以内；
+  5. **Pre-commit Hooks**: 在含 `.pre-commit-config.yaml` 的工程仓库（以 Python 为主），首次克隆后使用 `uv run pre-commit install` 激活本地 Git hooks，使 Ruff lint（含 auto-fix）、Ruff format 及通用代码卫生检查在每次 commit 前自动运行；未配置 pre-commit 的仓库（如纯文档/规约仓）跳过本条。若 hooks 自动修复了问题，提交会被中断，执行 `git add -p` 审阅修复内容后重新提交即可；
+  6. **Issue**: 在实际项目的 `docs/.agents/issue.md` 中维护你处理过的 Issue 摘要（问题描述、表因根因、处理方式、后续防范、同类问题影响与处理注意事项等），便于同类问题的跨上下文处理；注意识别相同 Issue，不要同 Issue 多处维护；
 - **Package Management Standardization (包管理规范)**:
   1. **Python**: 严禁使用 pip/poetry，**必须**统一使用 `uv` 进行包管理与脚本执行（如 `uv run`）；
   2. **JavaScript/TypeScript**: 严禁使用 npm/yarn，**必须**统一使用 `pnpm` 进行包管理与脚本执行；
 - **Database Management**: 谨慎操作，数据迁移、测试等操作严禁将现有数据删除，谨慎操作数据迁移的回滚，防止数据被清理。
 - **Browser Validation Protocol (浏览器验证准则)**：Agent 不得自行完成、绕过或模拟任何 OAuth / SSO 认证流程，所有登录态均来源于用户已认证的 Chrome 主 profile（真实用户登录态）。完整协议（连通性自检、凭证管理、E2E 集成、实机回归等）详见 [Browser Validation Protocol (浏览器验证协议)](~/.agents/docs/browser-validation.md)；
   1. **安全红线**：禁止在 Sandbox 浏览器中跳转 Google 同意屏；禁止以模拟用户或第三方账号替代真实登录态；禁止要求用户在 chat 中粘贴密码、Cookie 或验证码；
-- **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 [知识索引](./docs/.agents/knowledge-map.md)，并在文档目录变更时即时同步跟新；
+- **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 `docs/.agents/knowledge-map.md`，并在文档目录变更时即时同步更新；
 - **Documentation Standards (文档规范)**：
   1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，一律遵循 **Archify 图表规范** 产出图表，构建“图文并茂”的直观文档；
      - **单一事实源 (SSOT)**：图源 candidate JSON 为唯一权威定义，入库于仓库 `docs/diagrams/<slug>/`（`<slug>.json` 图源 + `<slug>.html` 交互版 + `<slug>.svg` 双主题嵌入版 + `<slug>.visual-check.json` 浏览器校验证据）；生成或修改图必须经 `archify finalize --quality showcase` 门禁（validate / deliver / check / browser-check）通过；
@@ -54,7 +54,7 @@
      - **逻辑模块化解构**：针对业务跨度较大的架构流程，以 boundary 分层承载领域边界与层级解构，以增强图表的自解说（Self-explaining）能力；
      - **Mermaid 边界**：面向人类展示的架构/流程图禁止新增 mermaid 代码块（存量逐步置换为 Archify 图）；Agent 运行时消费的协议文档中承载决策路由、状态判定的图，保留 mermaid 代码块形式（结构化文本，AI 可直接解析），不适用 Archify 门禁；
   2. **语言叙事**：用语精准，叙事完备，行文专业，聚焦核心，篇幅精炼，形象具体，体现真实作用与用户吸引性，字数恰当。日常文档撰写严格遵守 **[Structured Expression Framework](~/.agents/docs/structured-expression-framework.md)** 逻辑模型；
-  3. **Direct Hyperlinking (直接跳转)**: 在文档中提及 Repo 内其他资源（文档/代码）时，**必须**构建可跳转的相对路径链接（如 `[Doc Name](./path.md)`），严禁使用“死文本”引用，以降低信息检索熵；
+  3. **Direct Hyperlinking (直接跳转)**: 在文档中提及 Repo 内其他资源（文档/代码）时，**必须**构建可跳转的相对路径链接（如 `[Doc Name](./path.md)`），严禁使用“死文本”引用，以降低信息检索熵。例外：本总纲中指向经 `sync.sh` 分发至 `~/.agents/docs/` 的细分规约文档，允许使用该绝对路径，以保障全局消费场景（`~/.codex/AGENTS.md` 被任意项目读取）下的链接有效性；GitHub 渲染下以 README 索引表为仓内导航入口；
   4. **实操截图**：文档需要引入必要的浏览器实操截图时，需自行通过默认浏览器打开相关页面，通过实操现场截图并保留到文档路径进行文档引用；
   5. **Terminology & Localization (术语与用词规范)**：坚持“语义保真与最小认知摩擦”原则。凡属行业公认、无成熟精准中译或直译易导致严重歧义/不专业的专业技术术语（如 Harness、Agent、Runtime、Benchmark、Pipeline、Prompt、Issue、Ticket 等），**必须直接保留英文原词**，严禁生硬直译与过度本地化。具体执行与正负例清单详见 [Terminology Specifications](~/.agents/docs/terminology-specifications.md)；
   6. **Plain Language (自然语言规范)**：坚持“说人话”原则。凡叙述性产出（对话回复、日常汇报、方案叙述段、Commit/PR 正文、复盘正文），**必须像资深工程师对同事说话**：第一句给结论，句句挂得住可验证的事实，删净 AI 腔与中文翻译腔。适用范围、豁免清单、裁决层级与正负例示例详见 [Plain Language Specifications](~/.agents/docs/plain-language-specifications.md)；

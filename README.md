@@ -14,7 +14,7 @@
 
 - **道 (Mindset)**：确立系统的第一性原理，将“熵减”作为底线，警惕因表达与决策混乱带来的巨大商业与协作损失。
 - **法 (Strategy)**：提供架构级思考定式，主张“Plan-First Default”与“Verification Before Done”，提倡多模型复合嵌套与算力换空间。
-- **术 (Tactics)**：固化可落地的标准化 SOP，包含严格的包管理工具链（统一 `uv` 与 `pnpm`）、Git / Issue 纪律及图文并茂的可视化规范。
+- **术 (Tactics)**：固化可落地的标准化 SOP，包含严格的包管理工具链（统一 `uv` 与 `pnpm`）、Git / Issue 纪律、图文并茂的可视化规范、内容现行态约束与浏览器验证安全红线。
 
 ---
 
@@ -29,7 +29,7 @@
 | **[自然语言表达规范](./docs/plain-language-specifications.md)** | 以五层 36 条可判定规则治理叙述性产出的用词、句式、篇章、语气与中文反翻译腔，删净 AI 腔。              |
 | **[术语与本地化规范](./docs/terminology-specifications.md)**    | 坚持语义保真与认知熵减，约束 Harness、Agent 等专业术语强制保留英文原词。                              |
 | **[内容现行态规范](./docs/content-currency-specifications.md)** | 文档正文只承载现行态，版本与变更痕迹仅由 Git 历史承载；含四类禁止形态、载体与合法性豁免及 grep 判据。 |
-| **[浏览器验证协议](./docs/browser-validation.md)**              | Agent 浏览器自动化与真实用户登录态安全协议，明确 OAuth / 沙箱红线。                                   |
+| **[浏览器验证协议](./docs/browser-validation.md)**              | Agent 浏览器自动化与真实用户登录态安全协议，明确 OAuth / Sandbox 红线。                                   |
 | **[学术引用规范](./docs/reference-specifications.md)**          | 核心决策追溯所必须遵循的 IEEE 标准引用格式。                                                          |
 | **[全局同步脚本](./sync.sh)**                                   | 一键将本仓库规约与细分文档应用/分发至本机全局环境。                                                   |
 
@@ -37,7 +37,7 @@
 
 ## 🚀 本机全局一键应用
 
-为了使本地 AI Agent 工具（Codex、Claude Code 等）在任何工程目录下均能自动加载本套规约，可通过根目录脚本快速应用：
+为了使本地 AI Agent 工具（如 Codex）在任何工程目录下均能自动加载本套规约，可通过根目录脚本快速应用：
 
 ```bash
 # 1. 直接复制模式（静态快照）
@@ -51,11 +51,12 @@
 
 - `AGENTS.md` $\rightarrow$ `~/.codex/AGENTS.md`（Codex 全局系统规则）
 - `docs/*.md` $\rightarrow$ `~/.agents/docs/*.md`（跨项目共享的细分规范与事实源）
+- Claude Code：读取 `~/.claude/CLAUDE.md` 作为全局上下文，本脚本不自动接线，需手动接入（如 `ln -sf ~/.codex/AGENTS.md ~/.claude/CLAUDE.md`；接入前先与既有个人内容合并备份）
 
 ---
 
 ## 🤝 适用智能体生态
 
-- **Claude Code**：支持自定义 Slash Command（如 `/commit-no-push`）与全局上下文锚定。
+- **Claude Code**：支持自定义 Slash Command（如 `/commit-no-push`）；全局上下文可经 `~/.claude/CLAUDE.md` 手动锚定（见上方「映射路径说明」）。
 - **Codex**：读取 `~/.codex/AGENTS.md` 实现全生命周期编码约束。
 - **Antigravity / Gemini CLI**：严格遵循规划先行、子代理编排与交付自证定式。
