@@ -437,18 +437,6 @@ npx playwright test <your.authed.spec.ts>
 
 ---
 
-## 附录. 协议演进记录
-
-| 日期       | 变更                                                                                                                                                                                                                                                                                                                            |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-05-06 | 废弃浏览器扩展首选方案，统一收敛至 `mcp__chrome_devtools__*` 唯一驱动                                                                                                                                                                                                                                                           |
-| 2026-05-15 | 文档结构重组：引入术语约定、安全模型、风险矩阵；将项目特化案例移至附录                                                                                                                                                                                                                                                          |
-| 2026-05-15 | 协议泛化：移除项目特化描述，使协议可通用于所有需要浏览器验证的 Agent 行为规范                                                                                                                                                                                                                                                   |
-| 2026-05-16 | 驱动迁移：从 `mcp__chrome_devtools__*` 迁移至 `mcp__claude-in-chrome__*`，利用 Chrome 扩展实现零配置接入；新增常用操作模式章节；泛化所有项目特化引用                                                                                                                                                                            |
-| 2026-06-06 | 厘清 A 类（claude-in-chrome 交互）/ B 类（自治）分工；将 **Playwright MCP（`@playwright/mcp`）内置为全系统默认浏览器操作 MCP**，经 `builtin_tools(claude_code).config.mcp_config` 单一注入点 provision 至所有 Routine 运行时，用于浏览器实机回归验证（见 [集成方案](../concepts/design/browser-automation-mcp-integration.md)） |
-
----
-
 ## References (IEEE)
 
 <a id="ref1"></a>[1] Microsoft, "Authentication," _Playwright Documentation_, 2025. [Online]. Available: https://playwright.dev/docs/auth.
