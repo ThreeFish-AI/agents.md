@@ -40,6 +40,7 @@
   5. **Pre-commit Hooks**: 在含 `.pre-commit-config.yaml` 的工程仓库（以 Python 为主），首次克隆后使用 `uv run pre-commit install` 激活本地 Git hooks，使 Ruff lint（含 auto-fix）、Ruff format 及通用代码卫生检查在每次 commit 前自动运行；未配置 pre-commit 的仓库（如纯文档/规约仓）跳过本条。若 hooks 自动修复了问题，提交会被中断，执行 `git add -p` 审阅修复内容后重新提交即可；
   6. **Issue**: 在实际项目的 `docs/.agents/issue.md` 中维护你处理过的 Issue 摘要（问题描述、表因根因、处理方式、后续防范、同类问题影响与处理注意事项等），便于同类问题的跨上下文处理；注意识别相同 Issue，不要同 Issue 多处维护；
   7. **Human-in-the-Loop (人工介入)**: 需要用户决策或亲手撰写的环节，一律以交互请求发起（如 AskUserQuestion），**严禁**在代码、文档、配置等仓库产物中留 `TODO(human)` 一类人工占位（含输出风格要求的教学式占位）——占位会被当作现行态合入并阻塞后续读者。不阻塞主线的决策点事中发起、其余工作并行推进；阻塞型决策先给出推荐默认方案落地，交付后集中请求确认或改写；产物始终是可合入的完整现行态，仓库可加全仓占位扫描作机器门；
+  8. **Semantic Versioning (版本号管理)**: 所有项目的版本统一以 `x.x.x`（major.minor.patch，对齐 [SemVer 2.0.0](https://semver.org/lang/zh-CN/)）形式管理：`major` 仅在发生巨大的不兼容变化时升级；`minor` 在发生兼容的、常规的、大的新增或修改功能时升级；`patch` 仅为修复或调整小问题时升级。未经人为声明，默认一律只升级 `patch`，**严禁**擅自升级 `major` / `minor`；
 - **Package Management Standardization (包管理规范)**:
   1. **Python**: 严禁使用 pip/poetry，**必须**统一使用 `uv` 进行包管理与脚本执行（如 `uv run`）；
   2. **JavaScript/TypeScript**: 严禁使用 npm/yarn，**必须**统一使用 `pnpm` 进行包管理与脚本执行；
