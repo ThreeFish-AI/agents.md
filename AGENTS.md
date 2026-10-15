@@ -38,7 +38,10 @@
   3. **Link Validity**: 确保所有引用的 URL 可访问且具备明确的上下文价值；
   4. **Testing**: 统一在 `tests/` 下维护测试用例，区分单元测试（unit）和集成测试（integration），所有测试的本地运行总时间控制在 3 min 以内；
   5. **Pre-commit Hooks**: 在含 `.pre-commit-config.yaml` 的工程仓库（以 Python 为主），首次克隆后使用 `uv run pre-commit install` 激活本地 Git hooks，使 Ruff lint（含 auto-fix）、Ruff format 及通用代码卫生检查在每次 commit 前自动运行；未配置 pre-commit 的仓库（如纯文档/规约仓）跳过本条。若 hooks 自动修复了问题，提交会被中断，执行 `git add -p` 审阅修复内容后重新提交即可；
-  6. **Issue**: 在实际项目的 `docs/.agents/issue.md` 中维护你处理过的 Issue 摘要（问题描述、表因根因、处理方式、后续防范、同类问题影响与处理注意事项等），便于同类问题的跨上下文处理；注意识别相同 Issue，不要同 Issue 多处维护；
+  6. **Issue**: 在实际项目的 `docs/.agents/issue.md` 中以「头部索引表 + 主体详情」双层结构维护你处理过的 Issue 摘要，便于同类问题的跨上下文处理：
+     - **头部索引表**：每条 Issue 一行，维护五列——ID、标题（问题与处理结果的一句话概括）、完成状态（✅ 已完成 / 🔄 进行中 / ⏸ 暂不处理）、完成时间（`YYYY-MM-DD`，未完成置 `—`）与详情锚点（`[详情](#<ID>)`）；
+     - **主体详情块**：位于头部之后，每条 Issue 一块，块首以 `<a id="<ID>"></a>` + `## <ID>：<标题>` 建立锚点、承接索引行跳转，详情字段为问题描述、表因根因、处理方式、后续防范、同类问题影响与处理注意事项等（启用 markdownlint 的仓库为该文件豁免 MD033/MD051）；
+     - **ID 与维护纪律**：ID 形如 `I-001` 全文唯一递增，锚点 id 与 href 均与 ID 逐字一致（大小写敏感，勿按标题 slug 习惯小写化），索引行与详情块均按 ID 升序；注意识别相同 Issue，同 Issue 增量更新既有索引行与详情块，不要同 Issue 多处维护；
   7. **Human-in-the-Loop (人工介入)**: 需要用户决策或亲手撰写的环节，一律以交互请求发起（如 AskUserQuestion），**严禁**在代码、文档、配置等仓库产物中留 `TODO(human)` 一类人工占位（含输出风格要求的教学式占位）——占位会被当作现行态合入并阻塞后续读者。不阻塞主线的决策点事中发起、其余工作并行推进；阻塞型决策先给出推荐默认方案落地，交付后集中请求确认或改写；产物始终是可合入的完整现行态，仓库可加全仓占位扫描作机器门；
   8. **Semantic Versioning (版本号管理)**: 所有项目的版本统一以 `x.x.x`（major.minor.patch，对齐 [SemVer 2.0.0](https://semver.org/lang/zh-CN/)）形式管理：`major` 仅在发生巨大的不兼容变化时升级；`minor` 在发生兼容的、常规的、大的新增或修改功能时升级；`patch` 仅为修复或调整小问题时升级。未经人为声明，默认一律只升级 `patch`，**严禁**擅自升级 `major` / `minor`；
 - **Package Management Standardization (包管理规范)**:
