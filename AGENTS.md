@@ -63,7 +63,7 @@
   4. **实操截图**：文档需要引入必要的浏览器实操截图时，需自行通过默认浏览器打开相关页面，通过实操现场截图并保留到文档路径进行文档引用；
   5. **Terminology & Localization (术语与用词规范)**：坚持“语义保真与最小认知摩擦”原则。凡属行业公认、无成熟精准中译或直译易导致严重歧义/不专业的专业技术术语（如 Harness、Agent、Runtime、Benchmark、Pipeline、Prompt、Issue、Ticket 等），**必须直接保留英文原词**，严禁生硬直译与过度本地化。具体执行与正负例清单详见 [Terminology Specifications](~/.agents/docs/terminology-specifications.md)；
   6. **Plain Language (自然语言规范)**：坚持“说人话”原则。凡叙述性产出（对话回复、日常汇报、方案叙述段、Commit/PR 正文、复盘正文），**必须像资深工程师对同事说话**：第一句给结论，句句挂得住可验证的事实，删净 AI 腔与中文翻译腔。适用范围、豁免清单、裁决层级与正负例示例详见 [Plain Language Specifications](~/.agents/docs/plain-language-specifications.md)；
-  7. **Content Currency (内容现行态)**：文档正文只承载当前版本的实际内容，文件的历史版本与全部变更痕迹**仅由 Git 历史承载**，正文任何位置不得维护文件自身的变更记录信息。四类禁止形态、枚举计数词失同步、专用变更记录载体豁免、冻结产物路径豁免、as-of 戳与投影映射的宾语判定边界及 grep 可执行判据，详见 [Content Currency Specifications](~/.agents/docs/content-currency-specifications.md)；
+  7. **Content Currency (内容现行态)**：文档正文只承载当前版本的实际内容，文件的历史版本与全部变更痕迹**仅由 Git 历史承载**，正文任何位置不得维护文件自身的变更记录信息。四类禁止形态、枚举计数词失同步、专用变更记录载体豁免、冻结产物路径豁免、as-of 戳与投影映射的宾语判定边界及 grep 可执行判据，详见 [Content Currency Specifications](~/.agents/docs/content-currency-specifications.md)；未上线项目（从未发布任何版本）零版本负担的前置判定亦以该文为准；
   8. **Recursive Self-Improvement (自改进经验沉淀)**：在使用任一注册仓库（preening-substrate、guided-learn、vibe-video、vibe-tts、review-once、本规约体系及 rsi 自身）的 Skill/规约过程中发现的缺陷与经验技巧，统一经 [ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi) **直接沉淀进对应仓库的 Skill/规约文本**——条目登记 ledger、G0–G4 门禁核验后以经验落仓 PR 回流、PR 后自动上下文审阅；严禁在各仓另立协议副本。
 - **UI Table Design Norms (UI 表格设计规范)**：
   1. **样式一致性**：保持全局 UI 表格风格的一致性；
