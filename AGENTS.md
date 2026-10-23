@@ -53,11 +53,13 @@
 - **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 `docs/.agents/knowledge-map.md`，并在文档目录变更时即时同步更新；
 - **Documentation Standards (文档规范)**：
   1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，一律遵循 **Archify 图表规范** 产出图表，构建“图文并茂”的直观文档；
-     - **单一事实源 (SSOT)**：图源 candidate JSON 为唯一权威定义，入库于仓库 `docs/diagrams/<slug>/`（`<slug>.json` 图源 + `<slug>.html` 交互版 + `<slug>.svg` 双主题嵌入版 + `<slug>.visual-check.json` 浏览器校验证据）；生成或修改图必须经 `archify finalize --quality showcase` 门禁（validate / deliver / check / browser-check）通过；
-     - **嵌入方式**：文档以相对路径嵌入 SVG（仓库根用 `docs/diagrams/<slug>/<slug>.svg`，docs/ 内用 `diagrams/<slug>/<slug>.svg`），双主题自动适配深浅模式；
+     - **单一事实源 (SSOT)**（无条件全局规则：一图只保一个可编辑文本源与一个建模事实锚，防两套权威定义并存）：图源分层保唯一权威——可 diff 文本编辑入口唯一（A 档即 candidate JSON，B 档为 `.mmd` 文本源），candidate JSON 为建模事实与回执钉定物（A 档直接作图源入库，B 档按仓内管线约定入库）；坑位：B 档重绘后手改 html 产物即造成编辑面与建模面分裂，修改一律回到文本源重跑管线——archify 的布局级修复落在 candidate JSON 与渲染层、不可回写 `.mmd`，重绘须以 `.mmd` 为源重新创作 candidate，勿把 candidate/html 产物当常驻编辑入口；
+     - **门禁不变量**（无条件全局规则：门禁与回执语义跨仓唯一，档位只换形态、不降门禁）：生成或修改图必须经 `archify finalize --quality showcase` 门禁（validate / deliver / check / browser-check）通过，浏览器校验回执随产物入库——A 档入库 `<slug>.visual-check.json`，B 档以 finalize 四门回执为入库回执；坑位：勿把 A 档第四件当跨档普适件强加给 B 档管线（visual-check 感知审查按需触发，非每图必产；A 档四件套除外）；
+     - **形态档位**（条件：仓库存在宣告图表管线的 SSOT 文档；做法：产物目录布局与嵌入介质从其约定，公认两档——A 档：入库 `docs/diagrams/<slug>/` 四件套（`<slug>.json` 图源 + `<slug>.html` 交互版 + `<slug>.svg` 双主题嵌入版 + `<slug>.visual-check.json` 浏览器校验证据）；B 档（公认基线形态）：`.mmd` 文本源经 archify 重绘出 html 与 dark/light PNG、finalize 回执随产物入库，仓内管线 SSOT 就目录命名、变体式样另有更具体约定时以其为准；无仓内管线约定者默认 A 档；坑位：两档并存于同一仓库时按图归属的管线 SSOT 分派，无裁决依据的争议图回落 A 档，禁以档位差异为由绕开门禁不变量；管线形态演进时改仓内 SSOT，总纲不逐仓追踪，勿把仓内式样回写总纲（防第二事实源））；
+     - **嵌入方式**（无条件全局规则：文档一律以相对路径嵌入图产物，档位只换嵌入介质、不豁免嵌入）：A 档嵌 SVG（仓库根用 `docs/diagrams/<slug>/<slug>.svg`，docs/ 内用 `diagrams/<slug>/<slug>.svg`），SVG 双主题自动适配深浅模式；B 档嵌 dark PNG（单主题位图），light 版留存备查，双源嵌入（picture 双 PNG 等式样）为可选增强、非强制；坑位：dark PNG 的对比度失真场景在浅色模式（非深色），浅色场景为主的文档优先评估双源嵌入；
      - **色彩语义与兼容性**：为图表节点配置具备语义辨识度的色彩，并确保在深色模式（Dark Mode）下具有极高的对比度与清晰度；
      - **逻辑模块化解构**：针对业务跨度较大的架构流程，以 boundary 分层承载领域边界与层级解构，以增强图表的自解说（Self-explaining）能力；
-     - **Mermaid 边界**：面向人类展示的架构/流程图禁止新增 mermaid 代码块（存量逐步置换为 Archify 图）；Agent 运行时消费的协议文档中承载决策路由、状态判定的图，保留 mermaid 代码块形式（结构化文本，AI 可直接解析），不适用 Archify 门禁；
+     - **Mermaid 边界**：面向人类展示的架构/流程图禁止新增 mermaid 代码块（存量逐步置换为 Archify 图）；Agent 运行时消费的协议文档中承载决策路由、状态判定的图，保留 mermaid 代码块形式（结构化文本，AI 可直接解析），不适用 Archify 门禁；B 档 `.mmd` 属图源资产文本而非文档内嵌代码块，不受本禁令约束（条件：文件为 B 档管线的 `.mmd` 图源资产、非文档正文内嵌代码块；做法：按图源资产放行、不触发本禁令；坑位：勿把 `.mmd` 资产源误判为文档内嵌 mermaid 代码块而阻止建图）；
   2. **语言叙事**：用语精准，叙事完备，行文专业，聚焦核心，篇幅精炼，形象具体，体现真实作用与用户吸引性，字数恰当。日常文档撰写严格遵守 **[Structured Expression Framework](~/.agents/docs/structured-expression-framework.md)** 逻辑模型；
   3. **Direct Hyperlinking (直接跳转)**: 在文档中提及 Repo 内其他资源（文档/代码）时，**必须**构建可跳转的相对路径链接（如 `[Doc Name](./path.md)`），严禁使用“死文本”引用，以降低信息检索熵。例外：本总纲中指向经 `sync.sh` 分发至 `~/.agents/docs/` 的细分规约文档，允许使用该绝对路径，以保障全局消费场景（`~/.codex/AGENTS.md` 被任意项目读取）下的链接有效性；GitHub 渲染下以 README 索引表为仓内导航入口；
   4. **实操截图**：文档需要引入必要的浏览器实操截图时，需自行通过默认浏览器打开相关页面，通过实操现场截图并保留到文档路径进行文档引用；
