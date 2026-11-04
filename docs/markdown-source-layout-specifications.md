@@ -14,11 +14,11 @@
 
 1. **一段一行**：一个段落（含引用段、列表项内的段落）只占一个物理行；同段的多个句子同住一行，句内与句间都不另起物理行；
 2. **两种折行形态一并禁止**：按列宽折行（72/80/100 列）与一句一行（Semantic Line Breaks 式）同为段内手动换行，均判违规；
-3. **显示行宽交给 Renderer**：源码不承载显示行宽，阅读行长由编辑器软折行与渲染端负责（VS Code 内置 Markdown 扩展默认 `editor.wordWrap: on`）；
+3. **显示行宽交给 Renderer**：源码不承载显示行宽，阅读行长由编辑器软折行与渲染端负责；
 4. **有意的分隔用结构承载**：分段用空行，并列要点用列表项，引用块内分段用空 `>` 行；
 5. **语义级换行用显式语法**：确需渲染为换行的位置（地址块、签名档等）用 Hard Line Break 显式语法——行尾 `\` 或 `<br>`；行尾双空格同样合法但不可见、易被编辑器与 linter 剥除，不作首选。
 
-**判定口径**：逐行扫描，一行既非块级结构（「豁免清单」所列形态、空行（含空 `>` 行）、标题行（ATX `#` 与 setext 下划线 `===`/`---`）、thematic break、列表标记行、表格行、GitHub alert 标记行（`> [!NOTE]` 等）、独立 badge/图片行、链接引用与脚注定义行），又紧跟另一非块级结构行、中间无空行分隔，则该行是上一行的**续行**，判违规；检测输出续行号 N，表示应把第 N 行并回第 N-1 行。
+**判定口径**：逐行扫描，一行既非块级结构（「豁免清单」所列形态、空行（含空 `>` 行）、标题行（ATX `#` 与 setext 下划线 `===`/`---`）、thematic break、列表标记行、表格行、GitHub alert 标记行（`> [!NOTE]` 等）、独立 badge/图片行、链接引用与脚注定义行），又紧跟另一非块级结构行、中间无空行分隔、上一行未以显式 Hard Line Break（行尾 `\`、行尾双空格、`<br>`）收尾、且该行引用深度不高于上一行，则该行是上一行的**续行**，判违规；检测输出续行号 N，表示应把第 N 行并回第 N-1 行。
 
 ## ✅ 豁免清单 (Exemptions)
 
@@ -82,7 +82,7 @@ END { exit (n>0) }' "$@"
 # 有命中时 exit 1，可直接当 CI / pre-commit 门禁。
 ```
 
-已知误报与前置约定：4 空格缩进的 indented code block 与行首无 `|` 的 GFM 表格会被误报，本规约体系统一用 fenced code 与行首带 `|` 的表格即可规避；跨多行的 HTML 开标签、先列表后引用（`- > a`）的嵌套属保守漏报，不构成门禁障碍。
+已知误报与前置约定：4 空格缩进的 indented code block、行首无 `|` 的 GFM 表格、未先进入 HTML 块状态的跨多行 HTML 开标签（首行标签未以 `>` 闭合时被判正文，属性续行报折行）、`<pre>`/`<script>`/`<style>`/`<textarea>` 块内空行之后相邻的原样内容行（块状态在空行处提前关闭）会被误报，本规约体系统一用 fenced code、行首带 `|` 的表格、单行完整标签（原样内容用 fenced code 承载）即可规避；先列表后引用（`- > a`）的嵌套、已进入 HTML 块后的跨多行开标签与行首 `$$` 带尾随正文的行（被整行按数学块跳过，其续行不检出）属保守漏报，不构成门禁障碍。
 
 ## ✍️ 正负例 (Before/After)
 
@@ -107,27 +107,27 @@ END { exit (n>0) }' "$@"
 **全环境连接矩阵、配置中心 Key 映射、环境变量契约与已登记偏离**见[配置与外部依赖连接手册](./docs/concepts/configuration.md)。非 local 环境连通前需先完成[配置中心开通清单](docs/ops/config-center.md)。
 ```
 
-**判定说明**：负例 A 的两处折点分别落在「见」与「配」之间、「。」与「非」之间，两个边界两侧都是汉字，在 Chrome/Safari 中各渲染出一个多余空格；负例 B 按句号折行，同样改变渲染结果；正例把同段两句并回一个物理行——若两句确需各自成段，两行之间加空行成两段。并线修复已折行的文本时，中文与中文直接相接，中文与英文单词、数字之间按盘古之白补恰好一个半角空格，防止修复动作反向注入多余空格。
+**判定说明**：负例 A 的两处折点分别落在「见」与「配」之间、「。」与「非」之间，两个边界两侧都是汉字，在 Chrome/Safari 中各渲染出一个多余空格；负例 B 按句号折行，同样改变渲染结果；正例把同段两句并回一个物理行——若两句确需各自成段，两行之间加空行成两段。并线修复已折行的文本时，折点两侧均为汉字则直接相接，折点落在中文与英文单词、数字之间时按盘古之白处理——空格的量化与例外以 [Terminology Specifications](./terminology-specifications.md)「中英文混排与排版规范 (Typography)」节为唯一事实源，本文不重述；正例同时清理了样本中折点之外既有的行内空格（加粗边界与链接括号前各一处），防清理不彻底或反向注入多余空格。
 
 ## References (IEEE)
 
-<a id="ref1"></a>[1] J. MacFarlane, "CommonMark Spec 0.31.2, §6.8 Soft line breaks," *CommonMark*, 2024. [Online]. Available: https://spec.commonmark.org/0.31.2/#soft-line-breaks
+<a id="ref1"></a>[1] J. MacFarlane, "CommonMark Spec 0.31.2, §6.8 Soft line breaks," *CommonMark*, 2024. [Online]. Available: https://spec.commonmark.org/0.31.2/#soft-line-breaks.
 
-<a id="ref2"></a>[2] E. J. Etemad, K. Ishii, and F. Rivoal, "CSS Text Module Level 3, §4.1.3 Segment break transformation rules," *W3C*, 2026. [Online]. Available: https://www.w3.org/TR/css-text-3/#line-break-transform
+<a id="ref2"></a>[2] E. J. Etemad, K. Ishii, and F. Rivoal, "CSS Text Module Level 3, §4.1.3 Segment break transformation rules," *W3C*, 2026. [Online]. Available: https://www.w3.org/TR/css-text-3/#line-break-transform.
 
-<a id="ref3"></a>[3] GitHub, Inc., "Basic writing and formatting syntax — Line breaks," *GitHub Docs*. [Online]. Available: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#line-breaks
+<a id="ref3"></a>[3] GitHub, Inc., "Basic writing and formatting syntax — Line breaks," *GitHub Docs*. [Online]. Available: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#line-breaks.
 
-<a id="ref4"></a>[4] Prettier team, "Prettier 3.4: a lot of bug fixes," *Prettier Blog*, Nov. 2024. [Online]. Available: https://prettier.io/blog/2024/11/26/3.4.0
+<a id="ref4"></a>[4] Prettier team, "Prettier 3.4: a lot of bug fixes," *Prettier Blog*, Nov. 2024. [Online]. Available: https://prettier.io/blog/2024/11/26/3.4.0.
 
-<a id="ref5"></a>[5] W3C Chinese Layout Task Force, "Requirements for Chinese Text Layout (中文排版需求), §4.2.2 Words and word boundaries," *W3C*, 2026. [Online]. Available: https://www.w3.org/TR/clreq/#h_word_boundaries
+<a id="ref5"></a>[5] W3C Chinese Layout Task Force, "Requirements for Chinese Text Layout (中文排版需求), §4.2.2 Words and word boundaries," *W3C*, 2026. [Online]. Available: https://www.w3.org/TR/clreq/#h_word_boundaries.
 
-<a id="ref6"></a>[6] Prettier, "Options — Prose wrap," *Prettier Docs*. [Online]. Available: https://prettier.io/docs/options#prose-wrap
+<a id="ref6"></a>[6] Prettier, "Options — Prose wrap," *Prettier Docs*. [Online]. Available: https://prettier.io/docs/options#prose-wrap.
 
-<a id="ref7"></a>[7] D. Anson, "MD013 — Line length," *markdownlint Docs*. [Online]. Available: https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md
+<a id="ref7"></a>[7] D. Anson, "MD013 — Line length," *markdownlint Docs*. [Online]. Available: https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md.
 
-<a id="ref8"></a>[8] Git project, "git-diff(1) — --word-diff-regex," *Git Documentation*. [Online]. Available: https://git-scm.com/docs/git-diff
+<a id="ref8"></a>[8] Git project, "git-diff(1) — --word-diff-regex," *Git Documentation*. [Online]. Available: https://git-scm.com/docs/git-diff.
 
-<a id="ref9"></a>[9] M. Thompson, "Semantic Line Breaks (The SemBr Specification)," *sembr.org*. [Online]. Available: https://sembr.org/
+<a id="ref9"></a>[9] M. Thompson, "Semantic Line Breaks (The SemBr Specification)," *sembr.org*. [Online]. Available: https://sembr.org/.
 
 ## 🤝 与其他规范的分工
 
