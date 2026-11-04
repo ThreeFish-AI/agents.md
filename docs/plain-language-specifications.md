@@ -57,6 +57,7 @@
 
 - **与 [Structured Expression Framework](./structured-expression-framework.md) 的分工**：该文档定信息序与结构骨架（PREP／金字塔／SCQA／STAR），本规范定词汇、句子、篇章、语气与中文反翻译腔的质感。冲突时按上文裁决层级执行，兼容裁决（PREP 尾 P、SCQA 的 S、STAR 的 R）以上文「与表达模型的裁决」为唯一权威表述。
 - **与 [Terminology Specifications](./terminology-specifications.md) 的分工**：术语保留英文原词、专有名词大小写、盘古之白、行内代码反引号，以该规范为唯一事实源，本规范不重述、只引用。术语规范优先级高于本规范词汇层与中文反翻译腔层：行业精确术语（统计显著、robustness、availability、consistency、idempotency、可观测性等）及其固定译名不适用黑名单与口语化替换。
+- **与 [Markdown Source Layout Specifications](./markdown-source-layout-specifications.md) 的分工**：Markdown 源码的物理行布局（一段一行、禁手动折行）以该规范为唯一事实源，本规范治措辞质感、不涉行的切分；同一段落措辞与行布局分别命中两规范时互不豁免。
 
 ### 记号与可判定性
 

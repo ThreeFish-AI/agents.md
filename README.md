@@ -29,6 +29,7 @@
 | **[自然语言表达规范](./docs/plain-language-specifications.md)** | 以五层 37 条可判定规则治理叙述性产出的用词、句式、篇章、语气与中文反翻译腔，删净 AI 腔。              |
 | **[术语与本地化规范](./docs/terminology-specifications.md)**    | 坚持语义保真与认知熵减，约束 Harness、Agent 等专业术语强制保留英文原词。                              |
 | **[内容现行态规范](./docs/content-currency-specifications.md)** | 文档正文只承载现行态，版本与变更痕迹仅由 Git 历史承载；含四类禁止形态、载体与合法性豁免及 grep 判据。 |
+| **[Markdown 源码排版规范](./docs/markdown-source-layout-specifications.md)** | 正文一段占一个物理行，句内与句间均禁手动折行；含豁免清单、反方回应、正负例与 awk 检测门禁等。 |
 | **[浏览器验证协议](./docs/browser-validation.md)**              | Agent 浏览器自动化与真实用户登录态安全协议，明确 OAuth / Sandbox 红线。                                   |
 | **[学术引用规范](./docs/reference-specifications.md)**          | 核心决策追溯所必须遵循的 IEEE 标准引用格式。                                                          |
 | **[全局同步脚本](./sync.sh)**                                   | 一键将本仓库规约与细分文档应用/分发至本机全局环境。                                                   |
