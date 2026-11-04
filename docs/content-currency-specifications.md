@@ -170,4 +170,5 @@
 
 - **与 [AGENTS.md](../AGENTS.md)「Single Source of Truth」**：该法则禁数据副本（治引用方式），本规范禁版本叙事（治内容时态），同向强化；
 - **与 [AGENTS.md](../AGENTS.md)「Issue」条目**：issue.md 经「专用载体豁免」合法承载 Issue 摘要，判定边界以本文为准；
-- **与 [Plain Language Specifications](./plain-language-specifications.md)**：该规范治叙述性产出（含 Commit/PR 正文）的措辞质感，本规范治文档正文的内容时态，对象正交；规则冲突时按「双命中裁决」执行（禁止叙述优先）。
+- **与 [Plain Language Specifications](./plain-language-specifications.md)**：该规范治叙述性产出（含 Commit/PR 正文）的措辞质感，本规范治文档正文的内容时态，对象正交；规则冲突时按「双命中裁决」执行（禁止叙述优先）；
+- **与 [Markdown Source Layout Specifications](./markdown-source-layout-specifications.md)**：该规范治正文的物理行布局（一段一行），本规范治正文的内容时态，对象正交；句内折行会让按整句检索的 grep 判据零命中，该规范的检测器是本文判据可靠性的前置条件。
