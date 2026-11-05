@@ -33,7 +33,7 @@
 
 - **Structured AI-Pair Pipeline (规范化 AI 结对流水线)**: 遵循 **Specification-Driven (规约驱动)** + **Context-Anchored (上下文锚定)** + **AI-Pair (AI 结对)** 模式，将开发固化为可审计的流水线，避免代码腐化为无法维护的“大泥球 (Big Ball of Mud)”。
 - **Operational Excellence (卓越运营)**:
-  1. **Git Discipline**: 默认严禁调用 git commit；当用户显式要求提交时，一律使用 Claude Code 的自定义 Slash Command: `/commit` 进行操作（若非 Claude Code 运行环境，则读取 `/commit` 命令中的规则执行）。严禁执行 Rebase；严禁向 `master`/`main` 等主分支直接推送变更，变更一律基于工作分支提交并经 PR 合入；
+  1. **Git Discipline**: 处理完 Review 发现的 Issue、Comment 后，以及任务进入可提交阶段（目标变更已落地、相关验证已通过、无待决的人工问题）时，**必须**自动调用 `/commit`（含 `git pull` 与 `git push` 至当前工作分支；当前分支为 `master`/`main` 时先切出工作分支），**不得**转交用户手动触发；其余时点默认严禁调用 git commit；当用户显式要求提交时，一律使用 Claude Code 的自定义 Slash Command: `/commit` 进行操作（若非 Claude Code 运行环境，则读取 `/commit` 命令中的规则执行）。仅提交本任务产生的变更；用户明示暂不提交、处于 Plan 模式、相关验证未通过或 Review 仍有未处理项时，不得自动提交。严禁执行 Rebase；自动提交流程中严禁 force-push（推送被拒时停止并报告）；严禁向 `master`/`main` 等主分支直接推送变更，变更一律基于工作分支提交并经 PR 合入；
   2. **Temp Management**: 临时产物（执行计划等）一律收敛至 `.temp/` 并及时清理；
   3. **Link Validity**: 确保所有引用的 URL 可访问且具备明确的上下文价值；
   4. **Testing**: 统一在 `tests/` 下维护测试用例，区分单元测试（unit）和集成测试（integration），所有测试的本地运行总时间控制在 3 min 以内；
