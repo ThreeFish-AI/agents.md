@@ -125,7 +125,9 @@ flowchart TD
   CiC --> Reachable{"tabs_context_mcp<br/>可达?"}
   Reachable -->|是| TabCreate["tabs_create_mcp<br/>创建验证标签"]
   TabCreate --> OK["✅ 直接使用<br/>（已含真实登录态）"]
-  Reachable -->|否| Recover["引导用户：<br/>1. 确认 Chrome 已启动<br/>2. 确认 claude-in-chrome 扩展已安装启用<br/>3. 点击扩展图标完成连接"]
+  Reachable -->|否| HostCap{"宿主具备 claude-in-chrome<br/>能力? · §4.1"}
+  HostCap -->|是| Recover["引导用户：<br/>1. 确认 Chrome 已启动<br/>2. 确认 claude-in-chrome 扩展已安装启用<br/>3. 点击扩展图标完成连接<br/>（工具缺席 → §6.1 · 连接报错 → §6.4）"]
+  HostCap -->|否| Degrade["宿主层缺失（会话内无法补齐）<br/>按 §4.1 降级路径分派"]
   Recover --> OK
 
   NeedAuth -->|"B 类"| BRoute{"B 类场景分流"}
@@ -138,10 +140,12 @@ flowchart TD
   style CiC fill:#0b1f2a,stroke:#34d399,color:#ecfdf5
   style OK fill:#052e16,stroke:#22c55e,color:#dcfce7
   style Recover fill:#1f1d0a,stroke:#f59e0b,color:#fef3c7
+  style Degrade fill:#1f1d0a,stroke:#f59e0b,color:#fef3c7
   style E2E fill:#0b1f2a,stroke:#3b82f6,color:#e6edf3
   style DevCK fill:#0b1f2a,stroke:#3b82f6,color:#e6edf3
   style NeedAuth fill:#1f2937,stroke:#a78bfa,color:#ede9fe
   style Reachable fill:#1f2937,stroke:#a78bfa,color:#ede9fe
+  style HostCap fill:#1f2937,stroke:#a78bfa,color:#ede9fe
   style BRoute fill:#1f2937,stroke:#a78bfa,color:#ede9fe
   style Forbid fill:#3b0a0a,stroke:#f87171,color:#fee2e2
 ```
