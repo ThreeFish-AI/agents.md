@@ -73,10 +73,11 @@
 选型依据：
 
 1. 通过 Chrome 扩展直接接入用户日常使用的 Chrome，共享完整设备指纹与登录历史，规避 IdP 风控拦截；
-2. 无需用户手动添加 `--remote-debugging-port` 启动参数，扩展安装后自动建立连接，零额外配置；
+2. 无需用户手动添加 `--remote-debugging-port` 启动参数，扩展安装后自动建立连接，零额外配置——「无需」的背后是「不能」：Chrome 136 起在默认 user-data-dir 上忽略该旗标，手动添加亦不生效（完整排除性依据见第 6 条）；
 3. 提供 Tab Group 隔离机制，每个 Agent 会话拥有独立标签组，互不干扰；
 4. 同时支持视觉交互（`computer` 截图 + 鼠标键盘）与无障碍树（`read_page`）双通道，适应不同验证需求；
-5. 内置批量操作（`browser_batch`）与 GIF 录制（`gif_creator`），提升验证效率与文档化能力。
+5. 内置批量操作（`browser_batch`）与 GIF 录制（`gif_creator`），提升验证效率与文档化能力；
+6. 排除性依据：Chrome 136 起在默认 user-data-dir 上忽略 `--remote-debugging-port` / `--remote-debugging-pipe` 旗标（安全加固，封堵经远程调试口窃取 cookie 的攻击面），chrome_devtools、Playwright 等 CDP 客户端因此无法直连用户日常 Chrome，只能以隔离 user-data-dir 运行（无登录态）<sup>[[5]](#ref5)</sup>；复用真实登录态的通道只有扩展接入一条，「为何不配置远程调试口直连」的疑问以此关闭。
 
 > **A 类（交互）vs B 类（自治）的驱动分工**：上述“唯一驱动”针对 **A 类交互场景**——由开发者或 Agent 在**真人监督**的会话中验证 OAuth/SSO/认证态 UI，复用用户真实 Chrome 登录态。而 **B 类自治场景**（无人值守的后台 Agent 运行时：无真人监督、无桌面环境、headless）无法使用 claude-in-chrome（其以浏览器扩展形态接入，需可见桌面浏览器，登录 / CAPTCHA 须人工完成）。为此，无人值守的 B 类自治运行时应将 **Playwright MCP（`@playwright/mcp`，headless · isolated）配置为默认浏览器操作 MCP**，由采用本协议的项目在 Agent 运行时配置中统一注入（如各运行时的 MCP 配置注入点），供后台运行时执行浏览器实机回归验证；交互态的 B 类② 即时验证亦可经 claude-in-chrome 注入（§9.2-A）；鉴权回归复用 §9 的 dev-cookie storageState 旁路（**非** IdP storageState 复制）。
 
@@ -225,6 +226,8 @@ flowchart LR
 | 交互 CLI       | `claude --chrome` 启动，或会话内执行 `/chrome` 选择「Enabled by default」          | 即时启用                         |
 
 坑位：该 env 仅用户级配置有效，项目级 `.claude/settings` 不被官方接受；仅在 `~/.claude.json` 写 `claudeInChromeDefaultEnabled: true` 不激活集成——该键是 UI 状态记录而非运行时开关，未带 `--chrome` 的新会话不出现浏览器工具。开关只对之后启动的会话生效，进行中的会话无法追溯启用。
+
+**站点授权前置（site permission）**：扩展按站点授予操作权限，首次在未授权站点执行浏览、点击、输入等操作时触发站点级授权提示，允许的站点清单在扩展设置中管理<sup>[[6]](#ref6)</sup>；无人值守或长任务会话遇到新站点授权无人应答会阻塞该次操作，常用站点应提前在扩展设置中预放行。
 
 ### 6.2 连接状态验证
 
@@ -505,3 +508,7 @@ npx playwright test <your.authed.spec.ts>
 <a id="ref3"></a>[3] Microsoft, "Authentication," *Playwright Documentation*, 2025. [Online]. Available: https://playwright.dev/docs/auth.
 
 <a id="ref4"></a>[4] Anthropic, anthropics/claude-code, issue #72443 (closed as duplicate of #55332), GitHub. [Online]. Available: https://github.com/anthropics/claude-code/issues/72443.
+
+<a id="ref5"></a>[5] Google, "Changes to Remote Debugging Switches to Improve Security," *Chrome for Developers Blog*, Mar. 2025. [Online]. Available: https://developer.chrome.com/blog/remote-debugging-port.
+
+<a id="ref6"></a>[6] Anthropic, "Use Claude Code with Chrome," *Claude Code Docs*, 2026. [Online]. Available: https://code.claude.com/docs/en/chrome.
