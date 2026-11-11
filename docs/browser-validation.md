@@ -28,7 +28,7 @@
 | ------------------ | ------------------------------------------------------------------------------------------------------- |
 | **用户浏览器**     | 用户日常使用的 Chrome，包含已登录的 IdP 账号、扩展、书签等完整用户数据                                  |
 | **Sandbox 浏览器** | 无用户数据的隔离浏览器实例（如 Playwright 默认 `chromium.launch()` 或新建空白 Chrome profile）          |
-| **A 类场景**       | 需实时接入用户浏览器既有登录态的验证场景（OAuth / SSO / IdP 服务交互），**必须**通过 `claude-in-chrome` 执行        |
+| **A 类场景**       | 需实时接入用户浏览器既有登录态的验证场景（OAuth / SSO / IdP 服务交互），**必须**通过 `claude-in-chrome` 执行（宿主能力边界与无能力宿主的降级路径见 §4.1）        |
 | **B 类场景**       | Agent 不经手第三方 OAuth 的本地场景（① `storageState` 复用：登录由用户一次性手动完成，见 §8；② dev-cookie 注入：不接触 OAuth，可经 Playwright 或 `claude-in-chrome`（§9.2-A）注入） |
 | **IdP**            | Identity Provider，身份提供商（如 Google、GitHub、Okta 等），负责签发认证凭证                           |
 | **Tab Group**      | `claude-in-chrome` 扩展为每个 Agent 会话创建的隔离标签组，用于管理浏览器标签页                          |
@@ -79,6 +79,10 @@
 5. 内置批量操作（`browser_batch`）与 GIF 录制（`gif_creator`），提升验证效率与文档化能力。
 
 > **A 类（交互）vs B 类（自治）的驱动分工**：上述“唯一驱动”针对 **A 类交互场景**——由开发者或 Agent 在**真人监督**的会话中验证 OAuth/SSO/认证态 UI，复用用户真实 Chrome 登录态。而 **B 类自治场景**（无人值守的后台 Agent 运行时：无真人监督、无桌面环境、headless）无法使用 claude-in-chrome（其以浏览器扩展形态接入，需可见桌面浏览器，登录 / CAPTCHA 须人工完成）。为此，无人值守的 B 类自治运行时应将 **Playwright MCP（`@playwright/mcp`，headless · isolated）配置为默认浏览器操作 MCP**，由采用本协议的项目在 Agent 运行时配置中统一注入（如各运行时的 MCP 配置注入点），供后台运行时执行浏览器实机回归验证；交互态的 B 类② 即时验证亦可经 claude-in-chrome 注入（§9.2-A）；鉴权回归复用 §9 的 dev-cookie storageState 旁路（**非** IdP storageState 复制）。
+
+**宿主能力边界（无条件全局规则：claude-in-chrome 的可用性由宿主形态与认证模式先天决定，会话内任何配置努力都无法改变）**：该集成仅存在于 Claude Code 系宿主（CLI、IDE 扩展、SDK 拉起的子会话），且要求以 OAuth（claude.ai 账号）登录并直连 Anthropic 订阅（Pro / Max / Ultra / Team / Enterprise）——API key 或 setup-token 认证下集成被强制关闭（`--chrome` 旗标亦不生效），Bedrock / Vertex / Foundry 等第三方 provider 不可用；非 Claude Code 宿主（§1.1 适用范围所列 Codex 等，含本协议经分发链可达的全部其他 Agent 运行时）完全没有该 MCP。坑位：工具缺席不等于连接故障——非 Claude Code 宿主或认证模式不符属宿主层缺失，任何会话内排错都无法补齐，继续沿连接排错链空转只会误判为配置问题；机器层启用条件与验证手段见 §6.1 / §6.2。
+
+**A 类任务降级路径（条件：宿主处于上述能力边界外而任务属 A 类；做法：按任务性质三路分派，不硬闯）**：① 一次性交互验证，交用户在自有浏览器手动验证后将结果（页面表现、截图、报错信息）转述回会话；② 需 Agent 实操浏览器的任务，转移到具备 claude-in-chrome 能力的宿主或会话执行；③ 验证目标实际不依赖真实登录态时，改走 B 类无登录态路线（§9 dev-cookie 注入或 §8 storageState 复用，经 Playwright headless 执行）。坑位：降级只改变执行通道，不豁免 §1.2 核心不变量——任何路径都**禁止** Agent 在 Sandbox 浏览器驱动 OAuth 同意屏，工具缺席不得成为改用 Sandbox 的理由。
 
 ### 4.2 工具职责矩阵
 
@@ -204,7 +208,7 @@ flowchart LR
 
 ## 6. 运维规程：连通性自检
 
-每次会话**首次**需要登录态浏览前，Agent **必须**按以下顺序执行自检。任一步骤失败应**立即中止**并向用户报告现象，**禁止**以"换 Sandbox 重试"等方式暗箱降级。
+每次会话**首次**需要登录态浏览前，Agent **必须**按以下顺序执行自检。任一步骤失败应**立即中止**并向用户报告现象，**禁止**以"换 Sandbox 重试"等方式暗箱降级。claude-in-chrome 工具本身缺席时，先按 §6.1 集成启用前置条件分诊缺席原因：属开关未配置等**可配置项**的，引导用户一次性完成机器层配置（跨会话生效，仅对之后启动的会话生效）后于新会话重新执行本节自检；属宿主能力或认证模式缺失等**不可配置项**的，按 §4.1 宿主能力边界与降级路径分派，同样**禁止**硬闯 Sandbox。
 
 ### Step 1 — 扩展接入与 Tab Group 初始化
 
