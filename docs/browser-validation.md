@@ -198,11 +198,39 @@ flowchart LR
 
 1. 立即通过 IdP 的设备管理页面撤销相关会话（如 [Google 设备管理](https://myaccount.google.com/device-activity)）；
 2. 删除本地所有 `storageState` 与 `userDataDir` 产物；
-3. 重新执行 §6 连通性自检流程。
+3. 重新执行 §6.3 连通性自检流程。
 
 ---
 
-## 6. 运维规程：连通性自检
+## 6. 运维规程
+
+### 6.1 集成启用
+
+**前置条件（无条件全局规则：缺任一即集成关闭）**：Claude Code ≥ 2.1.290，且以 OAuth（claude.ai 账号）登录——API key 或 `claude setup-token` 认证下此功能被强制关闭。
+
+三条启用路径等价，任选其一：
+
+| 路径           | 配置方式                                                                          | 适用                             |
+| -------------- | --------------------------------------------------------------------------------- | -------------------------------- |
+| 用户级配置     | `~/.claude/settings.json` 的 env 块写入 `"CLAUDE_CODE_ENABLE_CFC": "1"`           | 常驻启用；对 SDK 拉起的子会话同样生效 |
+| 进程环境变量   | 同名环境变量 `CLAUDE_CODE_ENABLE_CFC`                                             | 单次会话 / 脚本化场景            |
+| 交互 CLI       | `claude --chrome` 启动，或会话内执行 `/chrome` 选择「Enabled by default」          | 即时启用                         |
+
+坑位：该 env 仅用户级配置有效，项目级 `.claude/settings` 不被官方接受；仅在 `~/.claude.json` 写 `claudeInChromeDefaultEnabled: true` 不激活集成——该键是 UI 状态记录而非运行时开关，未带 `--chrome` 的新会话不出现浏览器工具。开关只对之后启动的会话生效，进行中的会话无法追溯启用。
+
+### 6.2 连接状态验证
+
+**条件**：需要程序化确认集成是否激活（SDK 拉起子会话的启动检查、环境接入自检等）；**做法**：起一次性会话并解析流式输出：
+
+```bash
+claude -p <prompt> --output-format stream-json --verbose
+```
+
+取 init 事件（`type=="system"` 且 `subtype=="init"`）的 `mcp_servers[]`，`claude-in-chrome` 条目 `status=="connected"` 即集成连通。**坑位**：`--debug` 在 `-p` 模式下无日志输出，不能充当验证通道；向模型提问「列出你的浏览器工具」不可靠，同一 prompt 两次运行可得出相反结论；`claude mcp list` 不列该内置托管 server，清单零命中不代表集成未连接。
+
+本节验证集成层（Claude Code 进程与扩展的 MCP 通道握手）；§6.3 验证会话层（浏览器侧 Tab Group 可用性）——后者仍是每次会话首次使用登录态前的强制自检，两层不可互相替代。
+
+### 6.3 会话内连通性自检
 
 每次会话**首次**需要登录态浏览前，Agent **必须**按以下顺序执行自检。任一步骤失败应**立即中止**并向用户报告现象，**禁止**以"换 Sandbox 重试"等方式暗箱降级。
 
@@ -252,6 +280,27 @@ mcp__claude-in-chrome__navigate({
 
 > [!IMPORTANT]
 > Step 1 与 Step 2 之间应保持 **≥ 3 秒**间隔，避免短时高频跳转触发 IdP CAPTCHA 验证。
+
+### 6.4 故障排查
+
+`Browser extension is not connected` 报错按以下顺序排查：
+
+1. **账号与组织一致性**：扩展与 Claude Code 须登录同一 claude.ai 账号且同属一个 organization——多组织成员的高频坑，用 `/status` 的 Organization 行对照两侧；
+2. **网络可达性**：浏览器侧须可达 `bridge.claudeusercontent.com`，企业代理环境确认该域已放行；
+3. **service worker 休眠**：扩展 service worker 在长会话后休眠导致断连，`/chrome` 选择「Reconnect extension」恢复——Claude Code ≥ 2.1.290 该动作才真正重启连接，低版本仅刷新 UI 状态。
+
+### 6.5 标签组治理
+
+官方扩展的 Tab Group 行为（无条件全局规则：上游硬编码，无配置面）：
+
+- 每个会话独立创建一个 Tab Group，组名硬编码——会话进行中为 `✅Claude`，闲置标记为 `⌛Claude`；
+- 手动改组名会在该会话下次操作时被重置；官方无组名与归并配置<sup>[[4]](#ref4)</sup>；
+- 并行多会话下组随之膨胀；
+- `✅Claude` → `⌛Claude` 的状态翻转时序不受控——会话结束后组名可保持 `✅Claude` 数分钟，不可作为自动化触发器。
+
+**条件**：并行会话导致组膨胀、需要收敛为单一主组；**做法**：伴生自建扩展将 `Claude` / `✅Claude` / `⌛Claude` 同族组归并为唯一主组——主组择优顺序为「会话在用组 > 常驻组 > 页签最多的组」，以组事件去抖加周期兜底扫描双通道触发归并，迁空的组自动消失，空白 new tab 直接丢弃；**坑位**：会话操作期内官方扩展会把组名临时改回硬编码值，属预期抖动，归并逻辑不得据此判定主组漂移。
+
+治理工具的实现（Chrome 扩展源码）不入本规约仓，本文仅沉淀机制层描述。
 
 ---
 
@@ -435,7 +484,7 @@ npx playwright test <your.authed.spec.ts>
 | R-2  | `storageState` 漂移 | Cookie 域 / `SameSite` 变更后旧 state 静默失效 | 低   | setup project 末尾增加 URL 断言确认登录成功（如排除 `/auth/login` 路径）    |
 | R-3  | 多账号干扰          | 浏览器同时登录多个 IdP 账号致 OAuth 选择器弹出 | 低   | 自检失败时将账号选择器纳入指引，由用户在浏览器内显式选择目标账号            |
 | R-4  | 凭证泄漏            | `storageState` 文件意外提交至版本控制          | 低   | `.gitignore` + `.dockerignore` 双重屏蔽；CI 禁止挂载真实账号 `storageState` |
-| R-5  | 扩展连接中断        | claude-in-chrome 扩展与 Agent 会话断连         | 低   | 引导用户点击扩展图标重新建立连接；必要时重启 Chrome                         |
+| R-5  | 扩展连接中断        | claude-in-chrome 扩展与 Agent 会话断连         | 低   | 引导用户点击扩展图标重新建立连接；必要时重启 Chrome（完整排查链见 §6.4）     |
 
 ---
 
@@ -446,3 +495,5 @@ npx playwright test <your.authed.spec.ts>
 <a id="ref2"></a>[2] OWASP Foundation, "Session Management Cheat Sheet," *OWASP Cheat Sheet Series*, 2024. [Online]. Available: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html.
 
 <a id="ref3"></a>[3] Microsoft, "Authentication," *Playwright Documentation*, 2025. [Online]. Available: https://playwright.dev/docs/auth.
+
+<a id="ref4"></a>[4] Anthropic, anthropics/claude-code, issue #72443 (closed as duplicate of #55332), GitHub. [Online]. Available: https://github.com/anthropics/claude-code/issues/72443.
