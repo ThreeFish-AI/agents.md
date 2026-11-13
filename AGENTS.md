@@ -52,6 +52,7 @@
 - **Database Management**: 谨慎操作，数据迁移、测试等操作严禁将现有数据删除，谨慎操作数据迁移的回滚，防止数据被清理。
 - **Browser Validation Protocol (浏览器验证准则)**：Agent 不得自行完成、绕过或模拟任何 OAuth / SSO 认证流程，所有登录态均来源于用户已认证的浏览器（真实用户登录态；B 类① 经用户一次性手动登录导出 `storageState` 的例外见协议 §8）。完整协议（连通性自检、凭证管理、E2E 集成、实机回归等）详见 [Browser Validation Protocol (浏览器验证协议)](~/.agents/docs/browser-validation.md)；
   1. **安全红线**：禁止 Agent 在 Sandbox 浏览器中跳转 Google 同意屏（用户手动完成的 B 类① 登录除外，见协议 §8）；禁止以模拟用户或第三方账号替代真实登录态；禁止要求用户在 chat 中粘贴密码、Cookie 或验证码；
+  2. **Browser Tool Precedence (浏览器工具优先级)**（条件：Agent 需执行浏览器操作且宿主通道多于一条（Claude in Chrome 经扩展接入用户常用 Chrome 实例；chrome-devtools MCP、Playwright MCP 各自拉起独立自动化实例），任务含或不含登录态均适用；做法：默认经接入用户常用 Chrome 实例的通道（如 Claude in Chrome）完成一切浏览器操作（含本地 file:// 工件的脚本取证与截图校验），例外仅三项（任务需无用户画像的隔离环境、该通道明确不可用、用户明示指定），改用替代工具时须在回复中一句话说明降级原因，工具职责矩阵与场景路由见协议 §4；坑位：按「工具顺手」或「确定性可用」直接选用独立自动化实例，会把操作静默切离用户视野与真实登录态，规约缺仲裁时该偏离必然偶发）；
 - **Knowledge Map (知识索引)**：所有文档索引统一维护在实际项目的 `docs/.agents/knowledge-map.md`，并在文档目录变更时即时同步更新；
 - **Documentation Standards (文档规范)**：
   1. **Visual Documentation (图文并茂)**: 对于复杂逻辑，一律遵循 **Archify 图表规范** 产出图表，构建“图文并茂”的直观文档；
